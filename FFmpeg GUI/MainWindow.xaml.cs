@@ -29,10 +29,10 @@ namespace FFmpeg_GUI
         string[,] InputFiles;
         string OutputFile = "";
         string CurrentFile = "";
-        
+
         string GeneralArguments = "";
         string SpecificArguments = "";
-       
+
         string Line = "";
         string Output = "";
 
@@ -41,7 +41,7 @@ namespace FFmpeg_GUI
         TimeSpan Remaining = TimeSpan.FromSeconds(0);
 
         double Speed = 0.0;
-       
+
         Process ProcessFFmpeg;
         Process ProcessFFprobe;
 
@@ -110,7 +110,7 @@ namespace FFmpeg_GUI
         }
 
 
-      
+
 
         private void ButtonBrowse_Click(object sender, RoutedEventArgs e)
         {
@@ -157,7 +157,7 @@ namespace FFmpeg_GUI
 
         private void CheckBoxVideo_Checked(object sender, RoutedEventArgs e)
         {
-            GroupBoxVideo.IsEnabled = true;
+            //GroupBoxVideo.IsEnabled = true;
 
             if (InputFiles != null && TextBoxTargetPath.Text != "")
             {
@@ -167,7 +167,7 @@ namespace FFmpeg_GUI
 
         private void CheckBoxVideo_Unchecked(object sender, RoutedEventArgs e)
         {
-            GroupBoxVideo.IsEnabled = false;
+            //GroupBoxVideo.IsEnabled = false;
 
             if (CheckBoxAudio.IsChecked == false || InputFiles == null || TextBoxTargetPath.Text == "")
             {
@@ -178,7 +178,7 @@ namespace FFmpeg_GUI
 
         private void CheckBoxAudio_Checked(object sender, RoutedEventArgs e)
         {
-            GroupBoxAudio.IsEnabled = true;
+            //GroupBoxAudio.IsEnabled = true;
 
             if (InputFiles != null && TextBoxTargetPath.Text != "")
             {
@@ -188,7 +188,7 @@ namespace FFmpeg_GUI
 
         private void CheckBoxAudio_Unchecked(object sender, RoutedEventArgs e)
         {
-            GroupBoxAudio.IsEnabled = false;
+            //GroupBoxAudio.IsEnabled = false;
 
             if (CheckBoxVideo.IsChecked == false || InputFiles == null || TextBoxTargetPath.Text == "")
             {
@@ -379,29 +379,29 @@ namespace FFmpeg_GUI
             }
 
 
-            //Selection Start => No Video Copy [To be implemented]
-            //if (ComboBoxVideoCodec.SelectedIndex != 0 && SelectionSelected)
-            //{
-            //    //Argument += "-ss 01:00 ";
-            //}
+            //Selection Start => No Video Copy
+            if (ComboBoxVideoCodec.SelectedIndex != 0 && CheckBoxEnableSelection.IsChecked == true)
+            {
+                GeneralArguments += "-ss " + TextBoxStartHour.Text + ":" + TextBoxStartMinute.Text + ":" + TextBoxStartSecond.Text + "." + TextBoxStartMilisecond.Text + " ";
+            }
 
 
             //Source File
             GeneralArguments += "-y -i <INPUT>";
 
 
-            //Selection Start => With Video Copy [To be implemented]
-            //if (ComboBoxVideoCodec.SelectedIndex == 0 && SelectionSelected)
-            //{
-            //    //Argument += " -ss 01:00";
-            //}
+            //Selection Start => With Video Copy
+            if (ComboBoxVideoCodec.SelectedIndex == 0 && CheckBoxEnableSelection.IsChecked == true)
+            {
+                GeneralArguments += " -ss " + TextBoxStartHour.Text + ":" + TextBoxStartMinute.Text + ":" + TextBoxStartSecond.Text + "." + TextBoxStartMilisecond.Text;
+            }
 
 
-            //selection End [To be implemented]
-            //if (SelectionSelected)
-            //{
-            //    Argument += " -to 02:00";
-            //}
+            //Selection Duration
+            if (CheckBoxEnableSelection.IsChecked == true)
+            {
+                GeneralArguments += " -t " + TextBoxEndHour.Text + ":" + TextBoxEndMinute.Text + ":" + TextBoxEndSecond.Text + "." + TextBoxStartMilisecond.Text;
+            }
 
 
             //File Size (in bytes) [To be implemented]
@@ -485,7 +485,7 @@ namespace FFmpeg_GUI
                 //{
                 //     Argument += " -pix_fmt yuv420p";
                 //}
-                
+
 
 
                 //Encoder Params
@@ -586,7 +586,7 @@ namespace FFmpeg_GUI
 
                 this.Dispatcher.Invoke((Action)(() =>
                 {
-                    GroupBoxStatus.Header = "Status: " + (i + 1).ToString() + " of " + FilesCount.ToString();
+                    this.Title = "Status: " + (i + 1).ToString() + " of " + FilesCount.ToString();
 
 
                     if (CheckBoxVideo.IsChecked == true)
@@ -667,8 +667,8 @@ namespace FFmpeg_GUI
             CheckBoxVideo.IsEnabled = false;
             CheckBoxAudio.IsEnabled = false;
 
-            GroupBoxVideo.IsEnabled = false;
-            GroupBoxAudio.IsEnabled = false;
+            //GroupBoxVideo.IsEnabled = false;
+            //GroupBoxAudio.IsEnabled = false;
 
             new Thread(new ThreadStart(StartBatch)).Start();
         }

@@ -1,6 +1,5 @@
 ﻿Test using multiple audio filters simultaneously (if fail, need to combine -vf or -af parameters)
 
-Tabs: Input, Video, Audio, Convert
 
 Taskbar Progress
 Windows 10 Notification
@@ -15,6 +14,15 @@ Retrieve audio codec
 Retrieve audio bitrate
 Retrieve audio sampling frequency
 Retrieve audio channels count
+
+
+Show Length of video as selection duration if Selection is enabled
+Enable/Disable respective controls when Copy stream or Enable/Disable video/audio is checked/unchecked
+
+
+
+
+
 
 
 The general guideline is to use the slowest preset that you have patience for. Current presets in descending order of speed are: 
@@ -47,4 +55,3 @@ Register HotKey to Start/Pause/Stop screen capture
 
 
 Disable Audio/Video/Status tab, Enable after selecting input files
-

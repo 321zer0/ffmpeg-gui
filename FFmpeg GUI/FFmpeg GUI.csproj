@@ -75,9 +75,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AudioStream.cs" />
-    <Compile Include="PrimaryWindow.xaml.cs">
-      <DependentUpon>PrimaryWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="VideoStream.cs" />
     <Compile Include="WindowInputFiles.xaml.cs">
       <DependentUpon>WindowInputFiles.xaml</DependentUpon>
@@ -94,10 +91,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="PrimaryWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="WindowInputFiles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
