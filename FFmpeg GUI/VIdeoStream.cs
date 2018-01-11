@@ -7,78 +7,61 @@ using System.Windows;
 
 namespace FFmpeg_GUI
 {
-    class VideoStream
+    public class VideoStream
     {
-        private int _Index;
-        private int _AbsoluteIndex;
-
-        private string _Codec;
-        private int _Bitrate;
-        private Point _Resolution;
-        private int _FrameRate;
-
         public int Index
         {
-            get
-            {
-                return _Index;
-            }
-        }
-
-        public int AbsoluteIndex
-        {
-            get
-            {
-                return _AbsoluteIndex;
-            }
+            get;
+            private set;
         }
 
         public string Codec
         {
-            get
-            {
-                return _Codec;
-            }
+            get;
+            private set;
         }
 
         public int Bitrate
         {
-            get
-            {
-                return _Bitrate;
-            }
+            get;
+            private set;
         }
 
-       
-        public Point Resolution
+        public int ResolutionX
         {
-            get
-            {
-                return _Resolution;
-            }
+            get;
+            private set;
         }
 
-        public int FrameRate
+        public int ResolutionY
         {
-            get
-            {
-                return _FrameRate;
-            }
+            get;
+            private set;
         }
 
-
-
-        public VideoStream(int index, int absoluteIndex, string codec, int bitrate, Point resolution, int frameRate)
+        public string PixelFormat
         {
-            _Index = index;
-            _AbsoluteIndex = absoluteIndex;
-            _Codec = codec;
-            _Bitrate = bitrate;
-            _Resolution = resolution;
-            _FrameRate = frameRate;
+            get;
+            private set;
         }
 
-        
+        public double Framerate
+        {
+            get;
+            private set;
+        }
+
+
+        public VideoStream(int index, string codec, string pixelFormat, int bitrate, int resolutionX, int resolutionY, double framerate)
+        {
+            Index = index;
+            Codec = codec;
+            PixelFormat = pixelFormat;
+            Bitrate = bitrate;
+            ResolutionX = resolutionX;
+            ResolutionY = resolutionY;
+            Framerate = framerate;
+        }
 
 
     }

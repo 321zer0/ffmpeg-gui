@@ -6,74 +6,46 @@ using System.Threading.Tasks;
 
 namespace FFmpeg_GUI
 {
-    class AudioStream
+    public class AudioStream
     {
-        private int _Index;
-        private int _AbsoluteIndex;
-
-        private string _Codec;
-        private int _Bitrate;
-        private int _SamplingFrequency;
-        private int _Channels;
-
         public int Index
         {
-            get
-            {
-                return _Index;
-            }
-        }
-
-        public int AbsoluteIndex
-        {
-            get
-            {
-                return _AbsoluteIndex;
-            }
+            get;
+            private set;
         }
 
         public string Codec
         {
-            get
-            {
-                return _Codec;
-            }
+            get;
+            private set;
         }
 
         public int Bitrate
         {
-            get
-            {
-                return _Bitrate;
-            }
+            get;
+            private set;
         }
 
         public int SamplingFrequency
         {
-            get
-            {
-                return _SamplingFrequency;
-            }
+            get;
+            private set;
         }
 
-        public int Channels
+        public string ChannelCount
         {
-            get
-            {
-                return _Channels;
-            }
+            get;
+            private set;
         }
 
 
-
-        public AudioStream(int index, int absoluteIndex, string codec, int bitrate, int samplingFrequency, int channels)
+        public AudioStream(int index, string codec, int bitrate, int samplingFrequency, string channelCount)
         {
-            _Index = index;
-            _AbsoluteIndex = absoluteIndex;
-            _Codec = codec;
-            _Bitrate = bitrate;
-            _SamplingFrequency = samplingFrequency;
-            _Channels = channels;
+            Index = index;
+            Codec = codec;
+            Bitrate = bitrate;
+            SamplingFrequency = samplingFrequency;
+            ChannelCount = channelCount;
         }
 
 

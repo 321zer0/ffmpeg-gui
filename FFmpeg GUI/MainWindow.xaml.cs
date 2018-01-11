@@ -26,7 +26,7 @@ namespace FFmpeg_GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        string[,] InputFiles;
+        MediaFile[] InputFiles;
         string OutputFile = "";
         string CurrentFile = "";
 
@@ -43,8 +43,6 @@ namespace FFmpeg_GUI
         double Speed = 0.0;
 
         Process ProcessFFmpeg;
-        Process ProcessFFprobe;
-
         bool Exited = true;
 
 
@@ -78,40 +76,6 @@ namespace FFmpeg_GUI
         }
 
 
-
-        private string GetAudioCodec(string InputFile)
-        {
-            ProcessFFprobe = new Process();
-            string Codec = "";
-
-            ProcessFFprobe.StartInfo.FileName = "ffprobe.exe";
-            ProcessFFprobe.StartInfo.Arguments = "-v error -select_streams a:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 " + "\"" + InputFile + "\"";
-
-            ProcessFFprobe.StartInfo.UseShellExecute = false;
-            ProcessFFprobe.StartInfo.RedirectStandardOutput = true;
-            ProcessFFprobe.StartInfo.RedirectStandardError = true;
-            ProcessFFprobe.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            ProcessFFprobe.StartInfo.CreateNoWindow = true;
-
-            ProcessFFprobe.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
-            {
-                if (e.Data != null)
-                {
-                    Codec = e.Data;
-                }
-
-            };
-
-            ProcessFFprobe.Start();
-            ProcessFFprobe.BeginOutputReadLine();
-            ProcessFFprobe.WaitForExit();
-
-            return Codec;
-        }
-
-
-
-
         private void ButtonBrowse_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog Open = new OpenFileDialog();
@@ -119,13 +83,13 @@ namespace FFmpeg_GUI
 
             if (Open.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                InputFiles = new string[Open.FileNames.Length, 2];
+                InputFiles = new MediaFile[Open.FileNames.Length];
 
                 for (int i = 0; i < Open.FileNames.Length; i++)
                 {
-                    //Save Filename along with audio codec
-                    InputFiles[i, 0] = Open.FileNames[i];
-                    InputFiles[i, 1] = GetAudioCodec(Open.FileNames[i]);
+                    //Store MediaFile instance of the media file
+                    InputFiles[i] = new MediaFile(Open.FileNames[i]);
+                    InputFiles[i].ShowMediaInfo();
                 }
 
 
@@ -253,7 +217,7 @@ namespace FFmpeg_GUI
 
 
             //Get Amount Processed
-            if (Line.Contains("time=") & Line.Contains("speed="))
+            if (Line.Contains("time=") && Line.Contains("speed="))
             {
                 String[] TimeReached = Line.Substring(Line.IndexOf("time=") + "time=".Length, 8).Split(':');
 
@@ -283,13 +247,6 @@ namespace FFmpeg_GUI
                     Duration = TimeSpan.FromSeconds((Hours * 3600) + (Minutes * 60) + Seconds);
                 }
 
-
-
-                //Get Audio Codec //Using ffprobe to retrieve audio codec information
-                //if (Line.Contains("Stream #") && Line.Contains("Audio: "))
-                //{
-                //    AudioCodec = Parts[7];
-                //}
 
 
 
@@ -379,22 +336,15 @@ namespace FFmpeg_GUI
             }
 
 
-            //Selection Start => No Video Copy
-            if (ComboBoxVideoCodec.SelectedIndex != 0 && CheckBoxEnableSelection.IsChecked == true)
+            //Selection Start
+            if (CheckBoxEnableSelection.IsChecked == true)
             {
                 GeneralArguments += "-ss " + TextBoxStartHour.Text + ":" + TextBoxStartMinute.Text + ":" + TextBoxStartSecond.Text + "." + TextBoxStartMilisecond.Text + " ";
             }
 
-
             //Source File
             GeneralArguments += "-y -i <INPUT>";
 
-
-            //Selection Start => With Video Copy
-            if (ComboBoxVideoCodec.SelectedIndex == 0 && CheckBoxEnableSelection.IsChecked == true)
-            {
-                GeneralArguments += " -ss " + TextBoxStartHour.Text + ":" + TextBoxStartMinute.Text + ":" + TextBoxStartSecond.Text + "." + TextBoxStartMilisecond.Text;
-            }
 
 
             //Selection Duration
@@ -579,7 +529,7 @@ namespace FFmpeg_GUI
         private void StartBatch()
         {
             string Extension = "";
-            int FilesCount = InputFiles.GetUpperBound(0) + 1;
+            int FilesCount = InputFiles.Length;
 
             for (int i = 0; i < FilesCount; i++)
             {
@@ -598,13 +548,13 @@ namespace FFmpeg_GUI
                         switch (ComboBoxAudioCodec.SelectedIndex)
                         {
                             case 0:
-                                if (InputFiles[i, 1] == "aac")
+                                if (InputFiles[i].AudioStream[0].Codec == "aac")
                                 {
                                     Extension = ".m4a";
                                 }
                                 else
                                 {
-                                    Extension = "." + InputFiles[i, 1];
+                                    Extension = "." + InputFiles[i].AudioStream[0].Codec;
                                 }
                                 break;
 
@@ -622,7 +572,7 @@ namespace FFmpeg_GUI
                         }
                     }
 
-                    CurrentFile = InputFiles[i, 0];
+                    CurrentFile = InputFiles[i].Filename;
                     OutputFile = TextBoxTargetPath.Text + "\\" + System.IO.Path.GetFileNameWithoutExtension(CurrentFile) + "_converted" + Extension;
 
                 }));

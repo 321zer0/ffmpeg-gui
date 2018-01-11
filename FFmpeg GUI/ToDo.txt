@@ -1,27 +1,26 @@
-﻿Test using multiple audio filters simultaneously (if fail, need to combine -vf or -af parameters)
+﻿Create MediaFile instance from selected file
 
+Allow user to keep aspect ratio when setting resolution by setting the other dimension automatically
+Enable/Disable respective controls when Copy stream or Enable/Disable video/audio is checked/unchecked
+Allow user to specify framerate of output media file
+
+check existence of FFmpeg executable file
+Show Length of video during processing as selection duration if Selection is enabled
+Show time elapsed during processing
+Show fps during processing
+
+Enable 5.1 to stereo option only if audio track is 5.1
+Implement stereo to mono feature
+Option to exclude & transcode secondary audio streams
+
+Probe Subtitle streams and store them in SubtitleStream class
+Option to exclude particular subtitle streams
+Option to add subtitle streams to a media file
+
+Test using multiple audio filters simultaneously (if fail, need to combine -vf or -af parameters)
 
 Taskbar Progress
 Windows 10 Notification
-
-Retrieve video codec
-Retrieve video resolution
-Retrieve video bitrate
-Retrieve video pixel format (to determine correct CRF values to be displayed on Slider)
-Retrieve video frame rate
-
-Retrieve audio codec
-Retrieve audio bitrate
-Retrieve audio sampling frequency
-Retrieve audio channels count
-
-
-Show Length of video as selection duration if Selection is enabled
-Enable/Disable respective controls when Copy stream or Enable/Disable video/audio is checked/unchecked
-
-
-
-
 
 
 
