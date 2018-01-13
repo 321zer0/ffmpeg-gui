@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FFmpeg_GUI"
         mc:Ignorable="d"
-        Title="FFmpeg GUI Frontend" Height="496.294" Width="563.262" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Closing="WindowMain_Closing">
+        Title="FFmpeg GUI Frontend" Height="398.053" Width="563.262" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Closing="WindowMain_Closing">
     <Grid>
-        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="489" VerticalAlignment="Top" Width="623">
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="647" VerticalAlignment="Top" Width="623" Margin="0,0,-65,-15.667">
             <TabItem Header="Input Files" Height="22" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5" Margin="0,0,55.667,17.333">
                     <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="20,26,0,0" TextWrapping="Wrap" Text="Input File(s):" VerticalAlignment="Top"/>
@@ -97,16 +97,17 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Status">
-                <Grid Background="#FFE5E5E5">
-                    <TextBlock x:Name="TextBlockTimeRemaining" HorizontalAlignment="Left" Margin="13,112,0,0" TextWrapping="Wrap" Text="ETA:" VerticalAlignment="Top"/>
-                    <TextBlock x:Name="textBlock5" HorizontalAlignment="Left" Margin="12,164,0,0" TextWrapping="Wrap" Text="Progress:" VerticalAlignment="Top"/>
-                    <ProgressBar x:Name="ProgressBarProgress" HorizontalAlignment="Left" Height="30" Margin="74,157,0,0" VerticalAlignment="Top" Width="430"/>
-                    <TextBlock x:Name="TextBlockProgress" HorizontalAlignment="Left" Margin="512,164,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top" RenderTransformOrigin="-1.838,0.674"/>
-                    <TextBlock x:Name="TextBlockProcessed" HorizontalAlignment="Left" Margin="13,54,0,0" TextWrapping="Wrap" Text="Processed:" VerticalAlignment="Top"/>
-                    <TextBlock x:Name="TextBlockSpeed" HorizontalAlignment="Left" Margin="13,82,0,0" TextWrapping="Wrap" Text="Speed:" VerticalAlignment="Top"/>
+                <Grid Background="#FFE5E5E5" Margin="0,0,-0.333,-147.667">
+                    <TextBlock x:Name="TextBlockTimeRemaining" HorizontalAlignment="Left" Margin="13,151,0,0" TextWrapping="Wrap" Text="ETA:" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="textBlock5" HorizontalAlignment="Left" Margin="12,211,0,0" TextWrapping="Wrap" Text="Progress:" VerticalAlignment="Top"/>
+                    <ProgressBar x:Name="ProgressBarProgress" HorizontalAlignment="Left" Height="30" Margin="74,204,0,0" VerticalAlignment="Top" Width="430"/>
+                    <TextBlock x:Name="TextBlockProgress" HorizontalAlignment="Left" Margin="512,210,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top" RenderTransformOrigin="-1.838,0.674"/>
+                    <TextBlock x:Name="TextBlockProcessed" HorizontalAlignment="Left" Margin="13,86,0,0" TextWrapping="Wrap" Text="Processed:" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="TextBlockSpeed" HorizontalAlignment="Left" Margin="13,118,0,0" TextWrapping="Wrap" Text="Speed:" VerticalAlignment="Top"/>
                     <TextBlock x:Name="TextBlockCurrentFile" HorizontalAlignment="Left" Margin="13,22,0,0" Text="Current File:" VerticalAlignment="Top" TextTrimming="WordEllipsis" Width="512"/>
-                    <Button x:Name="ButtonConvert" Content="Convert" HorizontalAlignment="Left" Height="46" Margin="202,226,0,0" VerticalAlignment="Top" Width="170" Click="ButtonConvert_Click" IsEnabled="False"/>
-                    <TextBox x:Name="TextBoxCommand" TextWrapping="Wrap" Margin="12,303,82.667,42.333" IsReadOnly="True" IsEnabled="False"/>
+                    <Button x:Name="ButtonConvert" Content="Convert" HorizontalAlignment="Left" Height="46" Margin="202,268,0,0" VerticalAlignment="Top" Width="170" Click="ButtonConvert_Click" IsEnabled="False"/>
+                    <TextBox x:Name="TextBoxCommand" TextWrapping="Wrap" Margin="13,355,82,263.334" IsReadOnly="True" IsEnabled="False"/>
+                    <TextBlock x:Name="TextBlockOutputSize" HorizontalAlignment="Left" Margin="13,54,0,0" TextWrapping="Wrap" Text="Output Size:" VerticalAlignment="Top"/>
 
                 </Grid>
             </TabItem>

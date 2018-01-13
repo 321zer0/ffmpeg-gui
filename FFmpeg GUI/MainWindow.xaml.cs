@@ -28,7 +28,7 @@ namespace FFmpeg_GUI
     {
         MediaFile[] InputFiles;
         string OutputFile = "";
-        string CurrentFile = "";
+        int CurrentFile = 0;
 
         string GeneralArguments = "";
         string SpecificArguments = "";
@@ -41,6 +41,8 @@ namespace FFmpeg_GUI
         TimeSpan Remaining = TimeSpan.FromSeconds(0);
 
         double Speed = 0.0;
+
+        string OutputSize = "N/A";
 
         Process ProcessFFmpeg;
         bool Exited = true;
@@ -68,7 +70,7 @@ namespace FFmpeg_GUI
             DisplayStatus();
 
 
-            //Interrupted
+            //FFmpeg process was terminated externally
             if (Exited && Output != "")
             {
                 System.Windows.Application.Current.Shutdown();
@@ -121,8 +123,6 @@ namespace FFmpeg_GUI
 
         private void CheckBoxVideo_Checked(object sender, RoutedEventArgs e)
         {
-            //GroupBoxVideo.IsEnabled = true;
-
             if (InputFiles != null && TextBoxTargetPath.Text != "")
             {
                 ButtonConvert.IsEnabled = true;
@@ -131,8 +131,6 @@ namespace FFmpeg_GUI
 
         private void CheckBoxVideo_Unchecked(object sender, RoutedEventArgs e)
         {
-            //GroupBoxVideo.IsEnabled = false;
-
             if (CheckBoxAudio.IsChecked == false || InputFiles == null || TextBoxTargetPath.Text == "")
             {
                 GeneralArguments = "";
@@ -142,8 +140,6 @@ namespace FFmpeg_GUI
 
         private void CheckBoxAudio_Checked(object sender, RoutedEventArgs e)
         {
-            //GroupBoxAudio.IsEnabled = true;
-
             if (InputFiles != null && TextBoxTargetPath.Text != "")
             {
                 ButtonConvert.IsEnabled = true;
@@ -152,8 +148,6 @@ namespace FFmpeg_GUI
 
         private void CheckBoxAudio_Unchecked(object sender, RoutedEventArgs e)
         {
-            //GroupBoxAudio.IsEnabled = false;
-
             if (CheckBoxVideo.IsChecked == false || InputFiles == null || TextBoxTargetPath.Text == "")
             {
                 GeneralArguments = "";
@@ -236,16 +230,16 @@ namespace FFmpeg_GUI
 
 
                 //Get Duration
-                if (Line.Contains("Duration:"))
-                {
-                    String[] MediaDuration = Parts[3].Replace(",", "").Split(':');
+                //if (Line.Contains("Duration:"))
+                //{
+                //    String[] MediaDuration = Parts[3].Replace(",", "").Split(':');
 
-                    int Seconds = (int)double.Parse(MediaDuration[2]);
-                    int Minutes = int.Parse(MediaDuration[1]);
-                    int Hours = int.Parse(MediaDuration[0]);
+                //    int Seconds = (int)double.Parse(MediaDuration[2]);
+                //    int Minutes = int.Parse(MediaDuration[1]);
+                //    int Hours = int.Parse(MediaDuration[0]);
 
-                    Duration = TimeSpan.FromSeconds((Hours * 3600) + (Minutes * 60) + Seconds);
-                }
+                //    Duration = TimeSpan.FromSeconds((Hours * 3600) + (Minutes * 60) + Seconds);
+                //}
 
 
 
@@ -274,7 +268,65 @@ namespace FFmpeg_GUI
 
         private void DisplayStatus()
         {
+            double size = 0;
+
+
+            if (InputFiles != null && InputFiles.Length != 0)
+            {
+                if (CheckBoxEnableSelection.IsChecked == true && !string.IsNullOrEmpty(TextBoxEndHour.Text) && !string.IsNullOrEmpty(TextBoxEndMinute.Text) && !string.IsNullOrEmpty(TextBoxEndSecond.Text))
+                {
+                    Duration = new TimeSpan(int.Parse(TextBoxEndHour.Text), int.Parse(TextBoxEndMinute.Text), int.Parse(TextBoxEndSecond.Text));
+                }
+                else
+                {
+                    Duration = InputFiles[CurrentFile].Duration;
+                }
+
+                if (CheckBoxAudio.IsChecked == true && !string.IsNullOrEmpty(TextBoxAudioBitrate.Text))
+                {
+                    if (ComboBoxAudioCodec.SelectedIndex == 0)
+                    {
+                        size += InputFiles[CurrentFile].AudioStream[0].Bitrate * Duration.TotalSeconds;
+                    }
+                    else
+                    {
+                        size += int.Parse(TextBoxAudioBitrate.Text) * Duration.TotalSeconds;
+                    }
+                }
+
+
+                if (CheckBoxVideo.IsChecked == true && !string.IsNullOrEmpty(TextBoxVideoBitrate.Text))
+                {
+                    if (ComboBoxVideoCodec.SelectedIndex == 0)
+                    {
+                        size += InputFiles[CurrentFile].VideoStream.Bitrate * Duration.TotalSeconds;
+                    }
+                    else
+                    {
+                        size += int.Parse(TextBoxVideoBitrate.Text) * Duration.TotalSeconds;
+                    }
+                }
+
+                size = size / 8 * 1000;
+
+                if (size >= 1000 * 1000 * 1000)
+                {
+                    OutputSize = Math.Round(size / 1000 / 1000 / 1000, 1).ToString() + " GB";
+                }
+                else if (size >= 1000 * 1000)
+                {
+                    OutputSize = Math.Round(size / 1000 / 1000, 1).ToString() + " MB";
+                }
+                else if (size >= 1000)
+                {
+                    OutputSize = Math.Round(size / 1000, 1).ToString() + " KB";
+                }
+            }
+
+
+            TextBlockOutputSize.Text = "Output Size: " + OutputSize;
             TextBoxCommand.Text = "ffmpeg " + GeneralArguments;
+
 
             if (Exited)
             {
@@ -287,7 +339,7 @@ namespace FFmpeg_GUI
             {
                 try
                 {
-                    TextBlockCurrentFile.Text = "Current File: " + CurrentFile;
+                    TextBlockCurrentFile.Text = "Current File: " + System.IO.Path.GetFileName(InputFiles[CurrentFile].Filename);
 
                     TextBlockProcessed.Text = "Processed: " + Processed.ToString() + "     of     " + Duration.ToString();
 
@@ -312,16 +364,8 @@ namespace FFmpeg_GUI
         {
             GeneralArguments = "";
 
-            //No Source File(s)
-            if (InputFiles == null)
-            {
-                GeneralArguments = "";
-                return;
-            }
-
-
-            //No Target Path
-            if (TextBoxTargetPath.Text == "")
+            //No Source File(s) Or Target Path
+            if (InputFiles == null || InputFiles.Length == 0 || TextBoxTargetPath.Text == "")
             {
                 GeneralArguments = "";
                 return;
@@ -529,16 +573,15 @@ namespace FFmpeg_GUI
         private void StartBatch()
         {
             string Extension = "";
-            int FilesCount = InputFiles.Length;
-
-            for (int i = 0; i < FilesCount; i++)
+           
+            for (int i = 0; i < InputFiles.Length; i++)
             {
+                CurrentFile = i;
 
                 this.Dispatcher.Invoke((Action)(() =>
                 {
-                    this.Title = "Status: " + (i + 1).ToString() + " of " + FilesCount.ToString();
-
-
+                    this.Title = "FFmpeg GUI Frontend - Status: " + (CurrentFile + 1).ToString() + " of " + InputFiles.Length.ToString();
+                                                                               
                     if (CheckBoxVideo.IsChecked == true)
                     {
                         Extension = ".mp4";
@@ -548,13 +591,13 @@ namespace FFmpeg_GUI
                         switch (ComboBoxAudioCodec.SelectedIndex)
                         {
                             case 0:
-                                if (InputFiles[i].AudioStream[0].Codec == "aac")
+                                if (InputFiles[CurrentFile].AudioStream[0].Codec == "aac")
                                 {
                                     Extension = ".m4a";
                                 }
                                 else
                                 {
-                                    Extension = "." + InputFiles[i].AudioStream[0].Codec;
+                                    Extension = "." + InputFiles[CurrentFile].AudioStream[0].Codec;
                                 }
                                 break;
 
@@ -572,14 +615,13 @@ namespace FFmpeg_GUI
                         }
                     }
 
-                    CurrentFile = InputFiles[i].Filename;
-                    OutputFile = TextBoxTargetPath.Text + "\\" + System.IO.Path.GetFileNameWithoutExtension(CurrentFile) + "_converted" + Extension;
-
+                    OutputFile = TextBoxTargetPath.Text + "\\" + System.IO.Path.GetFileNameWithoutExtension(InputFiles[CurrentFile].Filename) + "_converted" + Extension;
+                                       
                 }));
 
 
                 SpecificArguments = GeneralArguments;
-                SpecificArguments = SpecificArguments.Replace("<INPUT>", "\"" + CurrentFile + "\"");
+                SpecificArguments = SpecificArguments.Replace("<INPUT>", "\"" + InputFiles[CurrentFile].Filename + "\"");
                 SpecificArguments = SpecificArguments.Replace("<OUTPUT>", "\"" + OutputFile + "\"");
 
 
@@ -616,9 +658,6 @@ namespace FFmpeg_GUI
 
             CheckBoxVideo.IsEnabled = false;
             CheckBoxAudio.IsEnabled = false;
-
-            //GroupBoxVideo.IsEnabled = false;
-            //GroupBoxAudio.IsEnabled = false;
 
             new Thread(new ThreadStart(StartBatch)).Start();
         }

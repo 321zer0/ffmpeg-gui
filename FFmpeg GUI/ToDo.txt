@@ -1,13 +1,17 @@
-﻿Create MediaFile instance from selected file
+﻿When both Audio & Video are excluded, Output file size should be zero
+Fix 2videoplayback.mp4 probe bug
+
+Enable/Disable respective controls when Copy stream or Enable/Disable video/audio is checked/unchecked
+check existence of FFmpeg executable file
+Display confirmation before ending program during conversion process
 
 Allow user to keep aspect ratio when setting resolution by setting the other dimension automatically
-Enable/Disable respective controls when Copy stream or Enable/Disable video/audio is checked/unchecked
-Allow user to specify framerate of output media file
-
-check existence of FFmpeg executable file
-Show Length of video during processing as selection duration if Selection is enabled
+Allow user to specify framerate
 Show time elapsed during processing
 Show fps during processing
+
+Allow user to specifiy encoder settings
+Allow user to use crf values
 
 Enable 5.1 to stereo option only if audio track is 5.1
 Implement stereo to mono feature
@@ -16,6 +20,9 @@ Option to exclude & transcode secondary audio streams
 Probe Subtitle streams and store them in SubtitleStream class
 Option to exclude particular subtitle streams
 Option to add subtitle streams to a media file
+
+Enable x265, xvid & other audio/video codec
+Enable other output container formats
 
 Test using multiple audio filters simultaneously (if fail, need to combine -vf or -af parameters)
 
