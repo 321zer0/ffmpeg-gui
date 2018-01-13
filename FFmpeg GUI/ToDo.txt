@@ -1,7 +1,6 @@
 ﻿When both Audio & Video are excluded, Output file size should be zero
 Fix 2videoplayback.mp4 probe bug
 
-Enable/Disable respective controls when Copy stream or Enable/Disable video/audio is checked/unchecked
 check existence of FFmpeg executable file
 Display confirmation before ending program during conversion process
 

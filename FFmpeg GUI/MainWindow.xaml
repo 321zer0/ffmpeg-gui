@@ -50,21 +50,21 @@
                 <Grid Background="#FFE5E5E5">
                     <Grid Background="#FFE5E5E5">
                         <TextBlock x:Name="textBlock2_Copy1" HorizontalAlignment="Left" Margin="15,20,0,0" TextWrapping="Wrap" Text="Codec:" VerticalAlignment="Top" RenderTransformOrigin="0.555,2.283"/>
-                        <TextBox x:Name="TextBoxAudioBitrate" HorizontalAlignment="Left" Height="23" Margin="79,66,0,0" Text="128" VerticalAlignment="Top" Width="65" MaxLines="1" MaxLength="4"/>
+                        <TextBox x:Name="TextBoxAudioBitrate" HorizontalAlignment="Left" Height="23" Margin="79,66,0,0" Text="128" VerticalAlignment="Top" Width="65" MaxLines="1" MaxLength="4" IsEnabled="False"/>
                         <TextBlock x:Name="textBlock4_Copy" HorizontalAlignment="Left" Margin="162,68,0,0" TextWrapping="Wrap" Text="kbps" VerticalAlignment="Top" RenderTransformOrigin="0.16,0.625"/>
-                        <CheckBox x:Name="CheckBoxAudioBitrate" Content="Bitrate:" HorizontalAlignment="Left" Margin="15,69,0,0" VerticalAlignment="Top"/>
-                        <ComboBox x:Name="ComboBoxAudioCodec" HorizontalAlignment="Left" Margin="62,18,0,0" VerticalAlignment="Top" Width="125" SelectedIndex="0" Text="Copy">
+                        <CheckBox x:Name="CheckBoxAudioBitrate" Content="Bitrate:" HorizontalAlignment="Left" Margin="15,69,0,0" VerticalAlignment="Top" IsEnabled="False" Checked="CheckBoxAudioBitrate_Checked" Unchecked="CheckBoxAudioBitrate_Unchecked"/>
+                        <ComboBox x:Name="ComboBoxAudioCodec" HorizontalAlignment="Left" Margin="62,18,0,0" VerticalAlignment="Top" Width="125" SelectedIndex="0" Text="Copy" SelectionChanged="ComboBoxAudioCodec_SelectionChanged">
                             <ComboBoxItem Content="Copy"/>
                             <ComboBoxItem Content="AAC"/>
                             <ComboBoxItem Content="MP3"/>
                             <ComboBoxItem Content="FLAC"/>
                         </ComboBox>
-                        <TextBox x:Name="TextBoxAudioSamplingRate" HorizontalAlignment="Left" Height="23" Margin="319,21,0,0" Text="44100" VerticalAlignment="Top" Width="50" MaxLines="1" MaxLength="5"/>
+                        <TextBox x:Name="TextBoxAudioSamplingRate" HorizontalAlignment="Left" Height="23" Margin="319,21,0,0" Text="44100" VerticalAlignment="Top" Width="50" MaxLines="1" MaxLength="5" IsEnabled="False"/>
                         <TextBlock x:Name="textBlock4_Copy1" HorizontalAlignment="Left" Margin="379,23,0,0" TextWrapping="Wrap" Text="Hertz" VerticalAlignment="Top"/>
-                        <CheckBox x:Name="CheckBoxAudioSamplingRate" Content="Sampling Rate:" HorizontalAlignment="Left" Margin="212,24,0,0" VerticalAlignment="Top"/>
-                        <TextBox x:Name="TextBoxAudioVolumeMultiplier" HorizontalAlignment="Left" Height="23" Margin="335,67,0,0" Text="3.0" VerticalAlignment="Top" Width="34" MaxLines="1" MaxLength="4"/>
-                        <CheckBox x:Name="CheckBoxAudioVolumeMultiplier" Content="Volume Multiplier:" HorizontalAlignment="Left" Margin="212,70,0,0" VerticalAlignment="Top"/>
-                        <CheckBox x:Name="CheckBoxAudioToStereo" Content="Convert 5.1 to Stereo" HorizontalAlignment="Left" Margin="395,70,0,0" VerticalAlignment="Top"/>
+                        <CheckBox x:Name="CheckBoxAudioSamplingRate" Content="Sampling Rate:" HorizontalAlignment="Left" Margin="212,24,0,0" VerticalAlignment="Top" IsEnabled="False" Checked="CheckBoxAudioSamplingRate_Checked" Unchecked="CheckBoxAudioSamplingRate_Unchecked"/>
+                        <TextBox x:Name="TextBoxAudioVolumeMultiplier" HorizontalAlignment="Left" Height="23" Margin="335,67,0,0" Text="3.0" VerticalAlignment="Top" Width="34" MaxLines="1" MaxLength="4" IsEnabled="False"/>
+                        <CheckBox x:Name="CheckBoxAudioVolumeMultiplier" Content="Volume Multiplier:" HorizontalAlignment="Left" Margin="212,70,0,0" VerticalAlignment="Top" IsEnabled="False" Checked="CheckBoxAudioVolumeMultiplier_Checked" Unchecked="CheckBoxAudioVolumeMultiplier_Unchecked"/>
+                        <CheckBox x:Name="CheckBoxAudioToStereo" Content="Convert 5.1 to Stereo" HorizontalAlignment="Left" Margin="395,70,0,0" VerticalAlignment="Top" IsEnabled="False"/>
                         <CheckBox x:Name="CheckBoxAudio" Content="Include Audio" HorizontalAlignment="Left" Margin="15,124,0,0" VerticalAlignment="Top" Width="102" Checked="CheckBoxAudio_Checked" Unchecked="CheckBoxAudio_Unchecked" IsChecked="True" RenderTransformOrigin="1.072,-5.476"/>
                     </Grid>
                 </Grid>
@@ -72,7 +72,7 @@
             <TabItem Header="Video">
                 <Grid Background="#FFE5E5E5">
                     <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="15,23,0,0" TextWrapping="Wrap" Text="Codec:" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="ComboBoxVideoCodec" HorizontalAlignment="Left" Margin="62,20,0,0" VerticalAlignment="Top" Width="125" SelectedIndex="1" Text="Copy">
+                    <ComboBox x:Name="ComboBoxVideoCodec" HorizontalAlignment="Left" Margin="62,20,0,0" VerticalAlignment="Top" Width="125" SelectedIndex="1" Text="Copy" SelectionChanged="ComboBoxVideoCodec_SelectionChanged">
                         <ComboBoxItem Content="Copy"/>
                         <ComboBoxItem Content="H.264 / AVC"/>
                     </ComboBox>
@@ -82,17 +82,17 @@
                     <TextBox x:Name="TextBoxVideoResolutionHeight" HorizontalAlignment="Left" Height="23" Margin="441,19,0,0" VerticalAlignment="Top" Width="50" RenderTransformOrigin="4.255,-0.328" MaxLines="1" Text="480" MaxLength="4"/>
                     <TextBox x:Name="TextBoxVideoBitrate" HorizontalAlignment="Left" Height="23" Margin="79,70,0,0" Text="800" VerticalAlignment="Top" Width="65" MaxLines="1" MaxLength="5"/>
                     <TextBlock x:Name="textBlock4" HorizontalAlignment="Left" Margin="162,72,0,0" TextWrapping="Wrap" Text="kbps" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="ComboBoxVideoRotation" HorizontalAlignment="Left" Margin="305,69,0,0" VerticalAlignment="Top" Width="230" SelectedIndex="2">
+                    <ComboBox x:Name="ComboBoxVideoRotation" HorizontalAlignment="Left" Margin="305,69,0,0" VerticalAlignment="Top" Width="230" SelectedIndex="2" IsEnabled="False">
                         <ComboBoxItem Content="90° Counter Clockwise &amp; Vertical Flip"/>
                         <ComboBoxItem Content="90° Clockwise"/>
                         <ComboBoxItem Content="90° Counter Clockwise"/>
                         <ComboBoxItem Content="90° Clockwise &amp; Vertical Flip"/>
                     </ComboBox>
-                    <CheckBox x:Name="CheckBoxVideoRotation" Content="Rotation:" HorizontalAlignment="Left" Margin="212,73,0,0" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="CheckBoxVideoResolution" Content="Resolution:" HorizontalAlignment="Left" Margin="212,22,0,0" VerticalAlignment="Top" IsChecked="True"/>
+                    <CheckBox x:Name="CheckBoxVideoRotation" Content="Rotation:" HorizontalAlignment="Left" Margin="212,73,0,0" VerticalAlignment="Top" Checked="CheckBoxVideoRotation_Checked" Unchecked="CheckBoxVideoRotation_Unchecked"/>
+                    <CheckBox x:Name="CheckBoxVideoResolution" Content="Resolution:" HorizontalAlignment="Left" Margin="212,22,0,0" VerticalAlignment="Top" IsChecked="True" Checked="CheckBoxVideoResolution_Checked" Unchecked="CheckBoxVideoResolution_Unchecked"/>
                     <TextBlock x:Name="textBlock3" HorizontalAlignment="Left" Margin="378,21,0,0" TextWrapping="Wrap" Text="pixels" VerticalAlignment="Top"/>
                     <TextBlock x:Name="textBlock3_Copy" HorizontalAlignment="Left" Margin="496,21,0,0" TextWrapping="Wrap" Text="pixels" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="CheckBoxVideoBitrate" Content="Bitrate:" HorizontalAlignment="Left" Margin="15,73,0,0" VerticalAlignment="Top" IsChecked="True"/>
+                    <CheckBox x:Name="CheckBoxVideoBitrate" Content="Bitrate:" HorizontalAlignment="Left" Margin="15,73,0,0" VerticalAlignment="Top" IsChecked="True" Checked="CheckBoxVideoBitrate_Checked" Unchecked="CheckBoxVideoBitrate_Unchecked"/>
                     <CheckBox x:Name="CheckBoxVideo" Content="Include Video" HorizontalAlignment="Left" Margin="15,128,0,0" VerticalAlignment="Top" Width="124" Checked="CheckBoxVideo_Checked" Unchecked="CheckBoxVideo_Unchecked" IsChecked="True"/>
                 </Grid>
             </TabItem>

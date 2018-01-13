@@ -573,7 +573,7 @@ namespace FFmpeg_GUI
         private void StartBatch()
         {
             string Extension = "";
-           
+
             for (int i = 0; i < InputFiles.Length; i++)
             {
                 CurrentFile = i;
@@ -581,7 +581,7 @@ namespace FFmpeg_GUI
                 this.Dispatcher.Invoke((Action)(() =>
                 {
                     this.Title = "FFmpeg GUI Frontend - Status: " + (CurrentFile + 1).ToString() + " of " + InputFiles.Length.ToString();
-                                                                               
+
                     if (CheckBoxVideo.IsChecked == true)
                     {
                         Extension = ".mp4";
@@ -616,7 +616,7 @@ namespace FFmpeg_GUI
                     }
 
                     OutputFile = TextBoxTargetPath.Text + "\\" + System.IO.Path.GetFileNameWithoutExtension(InputFiles[CurrentFile].Filename) + "_converted" + Extension;
-                                       
+
                 }));
 
 
@@ -681,7 +681,131 @@ namespace FFmpeg_GUI
             }
         }
 
+        private void ComboBoxAudioCodec_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (ComboBoxAudioCodec.SelectedIndex == 0)
+                {
+                    CheckBoxAudioBitrate.IsEnabled = false;
+                    CheckBoxAudioSamplingRate.IsEnabled = false;
+                    CheckBoxAudioToStereo.IsEnabled = false;
+                    CheckBoxAudioVolumeMultiplier.IsEnabled = false;
 
+                    CheckBoxAudioBitrate.IsChecked = false;
+                    CheckBoxAudioSamplingRate.IsChecked = false;
+                    CheckBoxAudioToStereo.IsChecked = false;
+                    CheckBoxAudioVolumeMultiplier.IsChecked = false;
+                }
+                else
+                {
+                    CheckBoxAudioBitrate.IsEnabled = true;
+                    CheckBoxAudioSamplingRate.IsEnabled = true;
+                    CheckBoxAudioToStereo.IsEnabled = true;
+                    CheckBoxAudioVolumeMultiplier.IsEnabled = true;
+
+                    CheckBoxAudioBitrate.IsChecked = true;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void ComboBoxVideoCodec_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (ComboBoxVideoCodec.SelectedIndex == 0)
+                {
+                    CheckBoxVideoBitrate.IsEnabled = false;
+                    CheckBoxVideoResolution.IsEnabled = false;
+                    CheckBoxVideoRotation.IsEnabled = false;
+                    TextBoxVideoResolutionWidth.IsEnabled = false;
+                    TextBoxVideoResolutionHeight.IsEnabled = false;
+
+                    CheckBoxVideoBitrate.IsChecked = false;
+                    CheckBoxVideoResolution.IsChecked = false;
+                    CheckBoxVideoRotation.IsChecked = false;
+                    CheckBoxAudioVolumeMultiplier.IsChecked = false;
+                }
+                else
+                {
+                    CheckBoxVideoBitrate.IsEnabled = true;
+                    CheckBoxVideoResolution.IsEnabled = true;
+                    CheckBoxVideoRotation.IsEnabled = true;
+
+                    CheckBoxVideoBitrate.IsChecked = true;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void CheckBoxAudioBitrate_Checked(object sender, RoutedEventArgs e)
+        {
+            TextBoxAudioBitrate.IsEnabled = true;
+        }
+
+        private void CheckBoxAudioBitrate_Unchecked(object sender, RoutedEventArgs e)
+        {
+            TextBoxAudioBitrate.IsEnabled = false;
+        }
+
+        private void CheckBoxAudioSamplingRate_Checked(object sender, RoutedEventArgs e)
+        {
+            TextBoxAudioSamplingRate.IsEnabled = true;
+        }
+
+        private void CheckBoxAudioSamplingRate_Unchecked(object sender, RoutedEventArgs e)
+        {
+            TextBoxAudioSamplingRate.IsEnabled = false;
+        }
+
+        private void CheckBoxAudioVolumeMultiplier_Checked(object sender, RoutedEventArgs e)
+        {
+            TextBoxAudioVolumeMultiplier.IsEnabled = true;
+        }
+
+        private void CheckBoxAudioVolumeMultiplier_Unchecked(object sender, RoutedEventArgs e)
+        {
+            TextBoxAudioVolumeMultiplier.IsEnabled = false;
+        }
+
+        private void CheckBoxVideoBitrate_Checked(object sender, RoutedEventArgs e)
+        {
+            TextBoxVideoBitrate.IsEnabled = true;
+        }
+
+        private void CheckBoxVideoBitrate_Unchecked(object sender, RoutedEventArgs e)
+        {
+            TextBoxVideoBitrate.IsEnabled = false;
+        }
+
+        private void CheckBoxVideoResolution_Checked(object sender, RoutedEventArgs e)
+        {
+            TextBoxVideoResolutionWidth.IsEnabled = true;
+            TextBoxVideoResolutionHeight.IsEnabled = true;
+        }
+
+        private void CheckBoxVideoResolution_Unchecked(object sender, RoutedEventArgs e)
+        {
+            TextBoxVideoResolutionWidth.IsEnabled = false;
+            TextBoxVideoResolutionHeight.IsEnabled = false;
+        }
+
+        private void CheckBoxVideoRotation_Checked(object sender, RoutedEventArgs e)
+        {
+            ComboBoxVideoRotation.IsEnabled = true;
+        }
+
+        private void CheckBoxVideoRotation_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ComboBoxVideoRotation.IsEnabled = false;
+        }
     }
 
 
