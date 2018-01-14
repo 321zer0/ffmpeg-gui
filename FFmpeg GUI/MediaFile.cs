@@ -22,6 +22,12 @@ namespace FFmpeg_GUI
             private set;
         }
 
+        public long FileSize
+        {
+            get;
+            private set;
+        }
+
         public TimeSpan Duration
         {
             get;
@@ -51,6 +57,7 @@ namespace FFmpeg_GUI
             if (File.Exists(filename))
             {
                 this.Filename = filename;
+                this.FileSize = new System.IO.FileInfo(filename).Length;
                 _AudioStream = new AudioStream[9];
 
                 GetMediaInfo(filename);

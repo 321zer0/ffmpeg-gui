@@ -42,8 +42,6 @@ namespace FFmpeg_GUI
 
         double Speed = 0.0;
 
-        string OutputSize = "N/A";
-
         Process ProcessFFmpeg;
         bool Exited = true;
 
@@ -268,11 +266,28 @@ namespace FFmpeg_GUI
 
         private void DisplayStatus()
         {
-            double size = 0;
-
-
             if (InputFiles != null && InputFiles.Length != 0)
             {
+                TextBlockCurrentFile.Text = "Current File: " + System.IO.Path.GetFileName(InputFiles[CurrentFile].Filename);
+                TextBoxCommand.Text = "ffmpeg " + GeneralArguments;
+
+                double fSize = 0;
+                double oSize = InputFiles[CurrentFile].FileSize;
+                double delta = 0;
+
+                if (oSize >= 1024 * 1024 * 1024)
+                {
+                    TextBlockOriginalSize.Text = "Original Size: " + Math.Round(oSize / 1024 / 1024 / 1024, 1).ToString() + " GB";
+                }
+                else if (oSize >= 1024 * 1024)
+                {
+                    TextBlockOriginalSize.Text = "Original Size: " + Math.Round(oSize / 1024 / 1024, 1).ToString() + " MB";
+                }
+                else if (oSize >= 1024)
+                {
+                    TextBlockOriginalSize.Text = "Original Size: " + Math.Round(oSize / 1024, 1).ToString() + " KB";
+                }
+
                 if (CheckBoxEnableSelection.IsChecked == true && !string.IsNullOrEmpty(TextBoxEndHour.Text) && !string.IsNullOrEmpty(TextBoxEndMinute.Text) && !string.IsNullOrEmpty(TextBoxEndSecond.Text))
                 {
                     Duration = new TimeSpan(int.Parse(TextBoxEndHour.Text), int.Parse(TextBoxEndMinute.Text), int.Parse(TextBoxEndSecond.Text));
@@ -286,11 +301,11 @@ namespace FFmpeg_GUI
                 {
                     if (ComboBoxAudioCodec.SelectedIndex == 0)
                     {
-                        size += InputFiles[CurrentFile].AudioStream[0].Bitrate * Duration.TotalSeconds;
+                        fSize += InputFiles[CurrentFile].AudioStream[0].Bitrate * Duration.TotalSeconds;
                     }
                     else
                     {
-                        size += int.Parse(TextBoxAudioBitrate.Text) * Duration.TotalSeconds;
+                        fSize += int.Parse(TextBoxAudioBitrate.Text) * Duration.TotalSeconds;
                     }
                 }
 
@@ -299,38 +314,44 @@ namespace FFmpeg_GUI
                 {
                     if (ComboBoxVideoCodec.SelectedIndex == 0)
                     {
-                        size += InputFiles[CurrentFile].VideoStream.Bitrate * Duration.TotalSeconds;
+                        fSize += InputFiles[CurrentFile].VideoStream.Bitrate * Duration.TotalSeconds;
                     }
                     else
                     {
-                        size += int.Parse(TextBoxVideoBitrate.Text) * Duration.TotalSeconds;
+                        fSize += int.Parse(TextBoxVideoBitrate.Text) * Duration.TotalSeconds;
                     }
                 }
 
-                size = size / 8 * 1000;
+                fSize = fSize / 8 * 1024;
+                delta = (oSize - fSize) / oSize * 100;
 
-                if (size >= 1000 * 1000 * 1000)
+                string msg = "smaller";
+
+                if (delta < 0)
                 {
-                    OutputSize = Math.Round(size / 1000 / 1000 / 1000, 1).ToString() + " GB";
+                    msg = "bigger";
+                    delta = -delta;
                 }
-                else if (size >= 1000 * 1000)
+
+                if (fSize >= 1024 * 1024 * 1024)
                 {
-                    OutputSize = Math.Round(size / 1000 / 1000, 1).ToString() + " MB";
+                    TextBlockFinalSize.Text = "Final Size: " + Math.Round(fSize / 1024 / 1024 / 1024, 1).ToString() + " GB" +
+                                               " (" + Math.Round(delta, 1).ToString() + " %  " + msg + ")";
                 }
-                else if (size >= 1000)
+                else if (fSize >= 1024 * 1024)
                 {
-                    OutputSize = Math.Round(size / 1000, 1).ToString() + " KB";
+                    TextBlockFinalSize.Text = "Final Size: " + Math.Round(fSize / 1024 / 1024, 1).ToString() + " MB" +
+                                               " (" + Math.Round(delta, 1).ToString() + " %  " + msg + ")";
+                }
+                else if (fSize >= 1024)
+                {
+                    TextBlockFinalSize.Text = "Final Size: " + Math.Round(fSize / 1024, 1).ToString() + " KB" +
+                                               " (" + Math.Round(delta, 1).ToString() + " %  " + msg + ")";
                 }
             }
 
-
-            TextBlockOutputSize.Text = "Output Size: " + OutputSize;
-            TextBoxCommand.Text = "ffmpeg " + GeneralArguments;
-
-
             if (Exited)
             {
-                TextBlockCurrentFile.Text = "Current File: N/A";
                 TextBlockProcessed.Text = "Processed: N/A";
                 TextBlockSpeed.Text = "Speed: N/A";
                 TextBlockTimeRemaining.Text = "Time Remaining: N/A";
@@ -339,9 +360,7 @@ namespace FFmpeg_GUI
             {
                 try
                 {
-                    TextBlockCurrentFile.Text = "Current File: " + System.IO.Path.GetFileName(InputFiles[CurrentFile].Filename);
-
-                    TextBlockProcessed.Text = "Processed: " + Processed.ToString() + "     of     " + Duration.ToString();
+                    TextBlockProcessed.Text = "Processed: " + Processed.ToString() + "     of     " + new TimeSpan(Duration.Hours, Duration.Minutes, Duration.Seconds).ToString();
 
                     TextBlockSpeed.Text = "Speed: " + Speed.ToString() + "x";
 
