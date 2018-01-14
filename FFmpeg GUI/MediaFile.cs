@@ -146,13 +146,30 @@ namespace FFmpeg_GUI
                     //Get Video Pixel Format
                     string vPixelFormat = Parts[1].Split(' ')[1].Split('(')[0];
 
-                    //Get Video Resolution
-                    int vResolutionX = int.Parse(Parts[3].Split(' ')[1].Split('x')[0]);
-                    int vResolutionY = int.Parse(Parts[3].Split(' ')[1].Split('x')[1]);
+                    int vResolutionX = 0;
+                    int vResolutionY = 0;
+                    int vBitrate = 0;
 
-                    //Get Video Bitrate
-                    int vBitrate = int.Parse(Parts[4].Split(' ')[1]);
+                    if (Parts[2].Contains('x'))
+                    {
+                        //Get Video Resolution
+                        vResolutionX = int.Parse(Parts[2].Split(' ')[1].Split('x')[0]);
+                        vResolutionY = int.Parse(Parts[2].Split(' ')[1].Split('x')[1]);
 
+                        //Get Video Bitrate
+                        vBitrate = int.Parse(Parts[3].Split(' ')[1]);
+                    }
+
+                    if (Parts[3].Contains('x'))
+                    {
+                        //Get Video Resolution
+                        vResolutionX = int.Parse(Parts[3].Split(' ')[1].Split('x')[0]);
+                        vResolutionY = int.Parse(Parts[3].Split(' ')[1].Split('x')[1]);
+
+                        //Get Video Bitrate
+                        vBitrate = int.Parse(Parts[4].Split(' ')[1]);
+                    }
+                    
                     //Get Video Framerate
                     double vFramerate = double.Parse(Parts[5].Split(' ')[1]);
 
