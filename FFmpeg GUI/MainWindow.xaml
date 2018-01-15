@@ -98,12 +98,12 @@
             </TabItem>
             <TabItem Header="Status">
                 <Grid Background="#FFE5E5E5" Margin="0,0,-0.333,-147.667">
-                    <TextBlock x:Name="TextBlockTimeRemaining" HorizontalAlignment="Left" Margin="13,185,0,0" TextWrapping="Wrap" Text="ETA: N/A" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="TextBlockTimeRemaining" HorizontalAlignment="Left" Margin="13,185,0,0" TextWrapping="Wrap" Text="Time Remaining: N/A" VerticalAlignment="Top"/>
                     <TextBlock x:Name="textBlock5" HorizontalAlignment="Left" Margin="12,237,0,0" TextWrapping="Wrap" Text="Progress:" VerticalAlignment="Top"/>
                     <ProgressBar x:Name="ProgressBarProgress" HorizontalAlignment="Left" Height="30" Margin="72,230,0,0" VerticalAlignment="Top" Width="430"/>
                     <TextBlock x:Name="TextBlockProgress" HorizontalAlignment="Left" Margin="511,236,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top" RenderTransformOrigin="-1.838,0.674"/>
                     <TextBlock x:Name="TextBlockProcessed" HorizontalAlignment="Left" Margin="13,120,0,0" TextWrapping="Wrap" Text="Processed: N/A" VerticalAlignment="Top"/>
-                    <TextBlock x:Name="TextBlockSpeed" HorizontalAlignment="Left" Margin="13,152,0,0" TextWrapping="Wrap" Text="Speed: N/A" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="TextBlockSpeed" HorizontalAlignment="Left" Margin="13,152,0,0" TextWrapping="Wrap" Text="Processing Speed: N/A" VerticalAlignment="Top"/>
                     <TextBlock x:Name="TextBlockCurrentFile" HorizontalAlignment="Left" Margin="13,22,0,0" Text="Current File: N/A" VerticalAlignment="Top" TextTrimming="WordEllipsis" Width="512"/>
                     <Button x:Name="ButtonConvert" Content="Convert" HorizontalAlignment="Left" Height="46" Margin="202,282,0,0" VerticalAlignment="Top" Width="170" Click="ButtonConvert_Click" IsEnabled="False"/>
                     <TextBox x:Name="TextBoxCommand" TextWrapping="Wrap" Margin="13,355,82,263.334" IsReadOnly="True" IsEnabled="False"/>

@@ -41,6 +41,7 @@ namespace FFmpeg_GUI
         TimeSpan Remaining = TimeSpan.FromSeconds(0);
 
         double Speed = 0.0;
+        int SpeedFPS = 0;
 
         Process ProcessFFmpeg;
         bool Exited = true;
@@ -209,7 +210,7 @@ namespace FFmpeg_GUI
             }
 
 
-            //Get Amount Processed
+            //Get Amount of Time Processed
             if (Line.Contains("time=") && Line.Contains("speed="))
             {
                 String[] TimeReached = Line.Substring(Line.IndexOf("time=") + "time=".Length, 8).Split(':');
@@ -218,7 +219,7 @@ namespace FFmpeg_GUI
                 int Minutes = int.Parse(TimeReached[1]);
                 int Hours = int.Parse(TimeReached[0]);
 
-                Processed = TimeSpan.FromSeconds((Hours * 3600) + (Minutes * 60) + Seconds);
+                Processed = new TimeSpan(Hours, Minutes, Seconds);
             }
 
 
@@ -227,23 +228,8 @@ namespace FFmpeg_GUI
             {
                 String[] Parts = Line.Split(' ');
 
-
-                //Get Duration
-                //if (Line.Contains("Duration:"))
-                //{
-                //    String[] MediaDuration = Parts[3].Replace(",", "").Split(':');
-
-                //    int Seconds = (int)double.Parse(MediaDuration[2]);
-                //    int Minutes = int.Parse(MediaDuration[1]);
-                //    int Hours = int.Parse(MediaDuration[0]);
-
-                //    Duration = TimeSpan.FromSeconds((Hours * 3600) + (Minutes * 60) + Seconds);
-                //}
-
-
-
-
-                //Get Speed
+                                
+                //Get Processing Speed
                 if (Line.Contains("speed="))
                 {
                     for (int i = 0; i < Parts.Length; i++)
@@ -251,6 +237,19 @@ namespace FFmpeg_GUI
                         if (Parts[i].Contains("speed="))
                         {
                             Speed = double.Parse(Parts[i].Replace("speed=", "").Replace("x", ""));
+                        }
+                    }
+                }
+
+
+                //Get Processing Speed in fps
+                if (Line.Contains("fps="))
+                {
+                    for (int i = 0; i < Parts.Length; i++)
+                    {
+                        if (Parts[i].Contains("fps="))
+                        {
+                            SpeedFPS = int.Parse(Parts[i + 1]);
                         }
                     }
                 }
@@ -354,7 +353,7 @@ namespace FFmpeg_GUI
             if (Exited)
             {
                 TextBlockProcessed.Text = "Processed: N/A";
-                TextBlockSpeed.Text = "Speed: N/A";
+                TextBlockSpeed.Text = "Processing Speed: N/A";
                 TextBlockTimeRemaining.Text = "Time Remaining: N/A";
             }
             else
@@ -363,7 +362,7 @@ namespace FFmpeg_GUI
                 {
                     TextBlockProcessed.Text = "Processed: " + Processed.ToString() + "     of     " + new TimeSpan(Duration.Hours, Duration.Minutes, Duration.Seconds).ToString();
 
-                    TextBlockSpeed.Text = "Speed: " + Speed.ToString() + "x";
+                    TextBlockSpeed.Text = "Processing Speed: " + SpeedFPS.ToString() + " fps (" + Speed.ToString() + "x)";
 
                     Remaining = TimeSpan.FromSeconds((int)((Duration - Processed).TotalSeconds / Speed));
                     TextBlockTimeRemaining.Text = "Time Remaining: " + Remaining.ToString();
