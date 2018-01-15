@@ -92,6 +92,7 @@ namespace FFmpeg_GUI
                     InputFiles[i].ShowMediaInfo();
                 }
 
+                TextBoxTargetPath.Text = new FileInfo(Open.FileNames[0]).Directory.FullName;
 
                 if (TextBoxTargetPath.Text != "" && (CheckBoxVideo.IsChecked == true || CheckBoxAudio.IsChecked == true))
                 {
