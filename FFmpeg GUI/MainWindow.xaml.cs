@@ -39,6 +39,7 @@ namespace FFmpeg_GUI
         TimeSpan Duration = TimeSpan.FromSeconds(0);
         TimeSpan Processed = TimeSpan.FromSeconds(0);
         TimeSpan Remaining = TimeSpan.FromSeconds(0);
+        TimeSpan Elapsed = TimeSpan.FromSeconds(0);
 
         double Speed = 0.0;
         int SpeedFPS = 0;
@@ -56,6 +57,7 @@ namespace FFmpeg_GUI
             Timer.Interval = new TimeSpan(0, 0, 1);
             Timer.Tick += (s, e) =>
             {
+                Elapsed = TimeSpan.FromSeconds(Elapsed.TotalSeconds + 1);
                 Cron();
             };
 
@@ -67,7 +69,6 @@ namespace FFmpeg_GUI
         {
             BuildArguments();
             DisplayStatus();
-
 
             //FFmpeg process was terminated externally
             if (Exited && Output != "")
@@ -90,7 +91,7 @@ namespace FFmpeg_GUI
                 {
                     //Store MediaFile instance of the media file
                     InputFiles[i] = new MediaFile(Open.FileNames[i]);
-                    InputFiles[i].ShowMediaInfo();
+                    //InputFiles[i].ShowMediaInfo();
                 }
 
                 TextBoxTargetPath.Text = new FileInfo(Open.FileNames[0]).Directory.FullName;
@@ -176,6 +177,9 @@ namespace FFmpeg_GUI
             ProcessFFmpeg.Start();
             ProcessFFmpeg.BeginOutputReadLine();
             ProcessFFmpeg.BeginErrorReadLine();
+
+            Elapsed = TimeSpan.FromSeconds(0);
+
             ProcessFFmpeg.WaitForExit();
 
             try
@@ -228,7 +232,7 @@ namespace FFmpeg_GUI
             {
                 String[] Parts = Line.Split(' ');
 
-                                
+
                 //Get Processing Speed
                 if (Line.Contains("speed="))
                 {
@@ -237,6 +241,7 @@ namespace FFmpeg_GUI
                         if (Parts[i].Contains("speed="))
                         {
                             Speed = double.Parse(Parts[i].Replace("speed=", "").Replace("x", ""));
+                            break;
                         }
                     }
                 }
@@ -250,6 +255,7 @@ namespace FFmpeg_GUI
                         if (Parts[i].Contains("fps="))
                         {
                             SpeedFPS = int.Parse(Parts[i + 1]);
+                            break;
                         }
                     }
                 }
@@ -354,6 +360,7 @@ namespace FFmpeg_GUI
             {
                 TextBlockProcessed.Text = "Processed: N/A";
                 TextBlockSpeed.Text = "Processing Speed: N/A";
+                TextBlockTimeElapsed.Text = "Time Elapsed: N/A";
                 TextBlockTimeRemaining.Text = "Time Remaining: N/A";
             }
             else
@@ -363,6 +370,8 @@ namespace FFmpeg_GUI
                     TextBlockProcessed.Text = "Processed: " + Processed.ToString() + "     of     " + new TimeSpan(Duration.Hours, Duration.Minutes, Duration.Seconds).ToString();
 
                     TextBlockSpeed.Text = "Processing Speed: " + SpeedFPS.ToString() + " fps (" + Speed.ToString() + "x)";
+
+                    TextBlockTimeElapsed.Text = "Time Elapsed: " + Elapsed.ToString();
 
                     Remaining = TimeSpan.FromSeconds((int)((Duration - Processed).TotalSeconds / Speed));
                     TextBlockTimeRemaining.Text = "Time Remaining: " + Remaining.ToString();
