@@ -303,7 +303,7 @@ namespace FFmpeg_GUI
                     Duration = InputFiles[CurrentFile].Duration;
                 }
 
-                if (CheckBoxAudio.IsChecked == true && !string.IsNullOrEmpty(TextBoxAudioBitrate.Text))
+                if (CheckBoxAudio.IsChecked == true && !string.IsNullOrEmpty(TextBoxAudioBitrate.Text) && InputFiles[CurrentFile].AudioStream[0] != null)
                 {
                     if (ComboBoxAudioCodec.SelectedIndex == 0)
                     {
@@ -316,7 +316,7 @@ namespace FFmpeg_GUI
                 }
 
 
-                if (CheckBoxVideo.IsChecked == true && !string.IsNullOrEmpty(TextBoxVideoBitrate.Text))
+                if (CheckBoxVideo.IsChecked == true && !string.IsNullOrEmpty(TextBoxVideoBitrate.Text) && InputFiles[CurrentFile].VideoStream != null)
                 {
                     if (ComboBoxVideoCodec.SelectedIndex == 0)
                     {
@@ -627,6 +627,7 @@ namespace FFmpeg_GUI
                                 {
                                     Extension = "." + InputFiles[CurrentFile].AudioStream[0].Codec;
                                 }
+                                Extension = ".m4a";
                                 break;
 
                             case 1:
@@ -678,6 +679,27 @@ namespace FFmpeg_GUI
             if (!ValidateParameters())
             {
                 return;
+            }
+
+            TimeSpan StartTime = TimeSpan.FromMilliseconds((int.Parse(TextBoxStartHour.Text) * 3600 * 1000) + (int.Parse(TextBoxStartMinute.Text) * 60 * 1000) + (int.Parse(TextBoxStartSecond.Text) * 1000) + int.Parse(TextBoxStartMilisecond.Text));
+            TimeSpan DurationTime = TimeSpan.FromMilliseconds((int.Parse(TextBoxEndHour.Text) * 3600 * 1000) + (int.Parse(TextBoxEndMinute.Text) * 60 * 1000) + (int.Parse(TextBoxEndSecond.Text) * 1000) + int.Parse(TextBoxEndMilisecond.Text));
+
+            TimeSpan EndTime = StartTime + DurationTime;
+
+            if (InputFiles != null && InputFiles.Length != 0)
+            {
+                foreach (MediaFile MediaFile in InputFiles)
+                {
+                    if (EndTime > MediaFile.Duration)
+                    {
+                        CheckBoxEnableSelection.IsChecked = false;
+
+                        System.Windows.MessageBox.Show("The selection cannot be applied because the file \"" + MediaFile.Filename + "\" is outside the selection range.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                        TabItemInput.Focus();
+                        return;
+                    }
+                }
             }
 
             ButtonConvert.IsEnabled = false;
@@ -833,6 +855,29 @@ namespace FFmpeg_GUI
         private void CheckBoxVideoRotation_Unchecked(object sender, RoutedEventArgs e)
         {
             ComboBoxVideoRotation.IsEnabled = false;
+        }
+
+        private void CheckBoxEnableSelection_Checked(object sender, RoutedEventArgs e)
+        {
+            TimeSpan StartTime = TimeSpan.FromMilliseconds((int.Parse(TextBoxStartHour.Text) * 3600 * 1000) + (int.Parse(TextBoxStartMinute.Text) * 60 * 1000) + (int.Parse(TextBoxStartSecond.Text) * 1000) + int.Parse(TextBoxStartMilisecond.Text));
+            TimeSpan DurationTime = TimeSpan.FromMilliseconds((int.Parse(TextBoxEndHour.Text) * 3600 * 1000) + (int.Parse(TextBoxEndMinute.Text) * 60 * 1000) + (int.Parse(TextBoxEndSecond.Text) * 1000) + int.Parse(TextBoxEndMilisecond.Text));
+
+            TimeSpan EndTime = StartTime + DurationTime;
+
+            if (InputFiles != null && InputFiles.Length != 0)
+            {
+                foreach (MediaFile MediaFile in InputFiles)
+                {
+                    if (EndTime > MediaFile.Duration)
+                    {
+                        CheckBoxEnableSelection.IsChecked = false;
+
+                        System.Windows.MessageBox.Show("The selection cannot be applied because the file \"" + MediaFile.Filename + "\" is outside the selection range.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                        break;
+                    }
+                }
+            }           
         }
     }
 

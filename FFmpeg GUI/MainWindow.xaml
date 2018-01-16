@@ -8,7 +8,7 @@
         Title="FFmpeg GUI Frontend" Height="443.386" Width="563.262" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Closing="WindowMain_Closing">
     <Grid>
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="434" VerticalAlignment="Top" Width="558" Margin="0,0,0,-18">
-            <TabItem Header="Input Files" Height="22" VerticalAlignment="Top">
+            <TabItem  x:Name ="TabItemInput" Header="Input Files" Height="22" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5" Margin="0,0,-3,17.667">
                     <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="20,26,0,0" TextWrapping="Wrap" Text="Input File(s):" VerticalAlignment="Top"/>
                     <Button x:Name="ButtonBrowse" Content="..." HorizontalAlignment="Left" Margin="100,26,0,0" VerticalAlignment="Top" Width="50" Click="ButtonBrowse_Click"/>
@@ -19,7 +19,7 @@
                     <GroupBox Header="Selection" HorizontalAlignment="Left" Height="127" Margin="10,125,0,0" VerticalAlignment="Top" Width="528">
                         <Grid>
 
-                            <CheckBox x:Name="CheckBoxEnableSelection" Content="Enable Selection" HorizontalAlignment="Left" Margin="10,9,0,0" VerticalAlignment="Top"/>
+                            <CheckBox x:Name="CheckBoxEnableSelection" Content="Enable Selection" HorizontalAlignment="Left" Margin="10,9,0,0" VerticalAlignment="Top" Checked="CheckBoxEnableSelection_Checked"/>
 
 
                             <TextBlock Text="Start:" Margin="10,41,375,38.333"/>
@@ -46,7 +46,7 @@
                     </GroupBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Audio">
+            <TabItem x:Name ="TabItemAudio"  Header="Audio">
                 <Grid Background="#FFE5E5E5">
                     <Grid Background="#FFE5E5E5">
                         <TextBlock x:Name="textBlock2_Copy1" HorizontalAlignment="Left" Margin="15,20,0,0" TextWrapping="Wrap" Text="Codec:" VerticalAlignment="Top" RenderTransformOrigin="0.555,2.283"/>
@@ -69,7 +69,7 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Video">
+            <TabItem x:Name ="TabItemVideo" Header="Video">
                 <Grid Background="#FFE5E5E5">
                     <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="15,23,0,0" TextWrapping="Wrap" Text="Codec:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="ComboBoxVideoCodec" HorizontalAlignment="Left" Margin="62,20,0,0" VerticalAlignment="Top" Width="125" SelectedIndex="1" Text="Copy" SelectionChanged="ComboBoxVideoCodec_SelectionChanged">
