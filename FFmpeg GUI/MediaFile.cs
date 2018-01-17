@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace FFmpeg_GUI
 {
@@ -57,7 +58,7 @@ namespace FFmpeg_GUI
             if (File.Exists(filename))
             {
                 this.Filename = filename;
-                this.FileSize = new System.IO.FileInfo(filename).Length;
+                this.FileSize = new FileInfo(filename).Length;
                 _AudioStream = new AudioStream[9];
 
                 GetMediaInfo(filename);
@@ -89,7 +90,7 @@ namespace FFmpeg_GUI
             ProcessFFmpeg.Exited += (object s, EventArgs e) =>
             {
                 ProcessFFmpeg.Close();
-                ProcessFFmpeg.Dispose();
+                //ProcessFFmpeg.Dispose();
             };
 
             ProcessFFmpeg.Start();
@@ -122,19 +123,19 @@ namespace FFmpeg_GUI
                     int Hours = int.Parse(Duration[0]);
                     int Minutes = int.Parse(Duration[1]);
                     int Seconds = 0;
-                    int Miliseconds = 0;
+                    int Milliseconds = 0;
 
                     if (Duration[2].Contains("."))
                     {
                         Seconds = int.Parse(Duration[2].Split('.')[0]);
-                        Miliseconds = int.Parse(Duration[2].Split('.')[1]);
+                        Milliseconds = int.Parse(Duration[2].Split('.')[1]);
                     }
                     else
                     {
                         Seconds = int.Parse(Duration[2]);
                     }
 
-                    this.Duration = TimeSpan.FromMilliseconds((Hours * 3600 * 1000) + (Minutes * 60 * 1000) + (Seconds * 1000) + Miliseconds);
+                    this.Duration = TimeSpan.FromMilliseconds((Hours * 3600 * 1000) + (Minutes * 60 * 1000) + (Seconds * 1000) + Milliseconds);
                     this.Bitrate = int.Parse(Parts[2].Replace(" bitrate: ", "").Replace(" kb/s", ""));
                 }
 
@@ -210,10 +211,6 @@ namespace FFmpeg_GUI
                 }
 
 
-
-
-
-
             }
             catch
             {
@@ -228,7 +225,7 @@ namespace FFmpeg_GUI
         {
             if (VideoStream != null || _AudioStream != null)
             {
-                System.Windows.MessageBox.Show("Media Duration: " + Duration + "\n" +
+                MessageBox.Show("Media Duration: " + Duration + "\n" +
                                                "Media Bitrate: " + Bitrate + "\n" +
                                                "\n" +
                                                "Video Index: " + VideoStream.Index + "\n" +
