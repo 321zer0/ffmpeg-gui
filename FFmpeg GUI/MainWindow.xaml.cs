@@ -214,23 +214,56 @@ namespace FFmpeg_GUI
             }
 
 
-            //Get Amount of Time Processed
-            if (Line.Contains("time=") && Line.Contains("speed="))
-            {
-                String[] TimeReached = Line.Substring(Line.IndexOf("time=") + "time=".Length, 8).Split(':');
+            ////Get Amount of Time Processed
+            //if (Line.Contains("time=") && Line.Contains("speed="))
+            //{
+            //    String[] TimeReached = Line.Substring(Line.IndexOf("time=") + "time=".Length, 8).Split(':');
 
-                int Seconds = (int)double.Parse(TimeReached[2]);
-                int Minutes = int.Parse(TimeReached[1]);
-                int Hours = int.Parse(TimeReached[0]);
+            //    int Seconds = (int)double.Parse(TimeReached[2]);
+            //    int Minutes = int.Parse(TimeReached[1]);
+            //    int Hours = int.Parse(TimeReached[0]);
 
-                Processed = new TimeSpan(Hours, Minutes, Seconds);
-            }
+            //    Processed = new TimeSpan(Hours, Minutes, Seconds);
+            //}
 
 
 
             try
             {
                 String[] Parts = Line.Split(' ');
+
+
+                //Get Amount of Time Processed
+                if (Line.Contains("time="))
+                {
+                    for (int i = 0; i < Parts.Length; i++)
+                    {
+                        if (Parts[i].Contains("time="))
+                        {
+                            String[] TimeReached = Parts[i].Replace("time=", "").Split(':');
+
+                            int Seconds = 0;
+
+                            int Hours = int.Parse(TimeReached[0]);
+                            int Minutes = int.Parse(TimeReached[1]);
+
+                            if (TimeReached[2].Contains("."))
+                            {
+                                Seconds = int.Parse(TimeReached[2].Split('.')[0]);
+                            }
+                            else
+                            {
+                                Seconds = int.Parse(TimeReached[2]);
+                            }
+
+                            Processed = new TimeSpan(Hours, Minutes, Seconds);
+                            break;
+                        }
+                    }
+                }
+
+
+                Speed = -1;
 
 
                 //Get Processing Speed
@@ -255,6 +288,26 @@ namespace FFmpeg_GUI
                         if (Parts[i].Contains("fps="))
                         {
                             SpeedFPS = int.Parse(Parts[i + 1]);
+                            break;
+                        }
+                    }
+                }
+
+
+                //Get Processing Speed in FPS
+                if (Line.Contains("fps="))
+                {
+                    for (int i = 0; i < Parts.Length; i++)
+                    {
+                        if (Parts[i].Contains("fps="))
+                        {
+                            SpeedFPS = int.Parse(Parts[i + 1]);
+
+                            if (Speed == -1)
+                            {
+                                Speed = SpeedFPS / InputFiles[CurrentFile].VideoStream.Framerate;
+                            }
+
                             break;
                         }
                     }
@@ -627,7 +680,6 @@ namespace FFmpeg_GUI
                                 {
                                     Extension = "." + InputFiles[CurrentFile].AudioStream[0].Codec;
                                 }
-                                Extension = ".m4a";
                                 break;
 
                             case 1:
