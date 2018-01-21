@@ -36,13 +36,13 @@ namespace FFmpeg_GUI
         string Line = "";
         string Output = "";
 
-        TimeSpan Duration = TimeSpan.FromSeconds(0);
-        TimeSpan Processed = TimeSpan.FromSeconds(0);
-        TimeSpan Remaining = TimeSpan.FromSeconds(0);
-        TimeSpan Elapsed = TimeSpan.FromSeconds(0);
+        TimeSpan MediaDuration = TimeSpan.FromSeconds(0);
+        TimeSpan MediaTimeProcessed = TimeSpan.FromSeconds(0);
+        TimeSpan ProcessingTimeRemaining = TimeSpan.FromSeconds(0);
+        TimeSpan ProcessingTimeElapsed = TimeSpan.FromSeconds(0);
 
         double Speed = 0.0;
-        int SpeedFPS = 0;
+        string SpeedFPS = "";
 
         Process ProcessFFmpeg;
         bool Exited = true;
@@ -53,11 +53,23 @@ namespace FFmpeg_GUI
         {
             InitializeComponent();
 
+            if (!File.Exists(Directory.GetCurrentDirectory() + "\\" + "ffmpeg.exe"))
+            {
+                System.Windows.MessageBox.Show("ffmpeg.exe binary file cannot be found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.Application.Current.Shutdown();
+            }
+
             DispatcherTimer Timer = new DispatcherTimer();
             Timer.Interval = new TimeSpan(0, 0, 1);
             Timer.Tick += (s, e) =>
             {
-                Elapsed = TimeSpan.FromSeconds(Elapsed.TotalSeconds + 1);
+                ProcessingTimeElapsed = TimeSpan.FromSeconds(ProcessingTimeElapsed.TotalSeconds + 1);
+
+                if (Speed == -1 && MediaTimeProcessed != TimeSpan.FromSeconds(0))
+                {
+
+                }
+
                 Cron();
             };
 
@@ -178,7 +190,7 @@ namespace FFmpeg_GUI
             ProcessFFmpeg.BeginOutputReadLine();
             ProcessFFmpeg.BeginErrorReadLine();
 
-            Elapsed = TimeSpan.FromSeconds(0);
+            ProcessingTimeElapsed = TimeSpan.FromSeconds(0);
 
             ProcessFFmpeg.WaitForExit();
 
@@ -214,20 +226,6 @@ namespace FFmpeg_GUI
             }
 
 
-            ////Get Amount of Time Processed
-            //if (Line.Contains("time=") && Line.Contains("speed="))
-            //{
-            //    String[] TimeReached = Line.Substring(Line.IndexOf("time=") + "time=".Length, 8).Split(':');
-
-            //    int Seconds = (int)double.Parse(TimeReached[2]);
-            //    int Minutes = int.Parse(TimeReached[1]);
-            //    int Hours = int.Parse(TimeReached[0]);
-
-            //    Processed = new TimeSpan(Hours, Minutes, Seconds);
-            //}
-
-
-
             try
             {
                 String[] Parts = Line.Split(' ');
@@ -256,43 +254,33 @@ namespace FFmpeg_GUI
                                 Seconds = int.Parse(TimeReached[2]);
                             }
 
-                            Processed = new TimeSpan(Hours, Minutes, Seconds);
+                            MediaTimeProcessed = new TimeSpan(Hours, Minutes, Seconds);
                             break;
                         }
                     }
                 }
+
+
 
 
                 Speed = -1;
 
-
                 //Get Processing Speed
-                if (Line.Contains("speed="))
-                {
-                    for (int i = 0; i < Parts.Length; i++)
-                    {
-                        if (Parts[i].Contains("speed="))
-                        {
-                            Speed = double.Parse(Parts[i].Replace("speed=", "").Replace("x", ""));
-                            break;
-                        }
-                    }
-                }
+                //if (Line.Contains("speed="))
+                //{
+                //    for (int i = 0; i < Parts.Length; i++)
+                //    {
+                //        if (Parts[i].Contains("speed="))
+                //        {
+                //            Speed = double.Parse(Parts[i].Replace("speed=", "").Replace("x", ""));
+                //            break;
+                //        }
+                //    }
+                //}
 
 
-                //Get Processing Speed in fps
-                if (Line.Contains("fps="))
-                {
-                    for (int i = 0; i < Parts.Length; i++)
-                    {
-                        if (Parts[i].Contains("fps="))
-                        {
-                            SpeedFPS = int.Parse(Parts[i + 1]);
-                            break;
-                        }
-                    }
-                }
 
+                SpeedFPS = "";
 
                 //Get Processing Speed in FPS
                 if (Line.Contains("fps="))
@@ -301,18 +289,17 @@ namespace FFmpeg_GUI
                     {
                         if (Parts[i].Contains("fps="))
                         {
-                            SpeedFPS = int.Parse(Parts[i + 1]);
+                            SpeedFPS = Parts[i + 1];
 
-                            if (Speed == -1)
+                            if (Speed == -1 && InputFiles[CurrentFile].VideoStream != null)
                             {
-                                Speed = SpeedFPS / InputFiles[CurrentFile].VideoStream.Framerate;
+                                Speed = double.Parse(SpeedFPS) / InputFiles[CurrentFile].VideoStream.Framerate;
                             }
 
                             break;
                         }
                     }
                 }
-
             }
             catch
             {
@@ -349,22 +336,22 @@ namespace FFmpeg_GUI
 
                 if (CheckBoxEnableSelection.IsChecked == true && !string.IsNullOrEmpty(TextBoxEndHour.Text) && !string.IsNullOrEmpty(TextBoxEndMinute.Text) && !string.IsNullOrEmpty(TextBoxEndSecond.Text))
                 {
-                    Duration = new TimeSpan(int.Parse(TextBoxEndHour.Text), int.Parse(TextBoxEndMinute.Text), int.Parse(TextBoxEndSecond.Text));
+                    MediaDuration = new TimeSpan(int.Parse(TextBoxEndHour.Text), int.Parse(TextBoxEndMinute.Text), int.Parse(TextBoxEndSecond.Text));
                 }
                 else
                 {
-                    Duration = InputFiles[CurrentFile].Duration;
+                    MediaDuration = InputFiles[CurrentFile].Duration;
                 }
 
                 if (CheckBoxAudio.IsChecked == true && !string.IsNullOrEmpty(TextBoxAudioBitrate.Text) && InputFiles[CurrentFile].AudioStream[0] != null)
                 {
                     if (ComboBoxAudioCodec.SelectedIndex == 0)
                     {
-                        fSize += InputFiles[CurrentFile].AudioStream[0].Bitrate * Duration.TotalSeconds;
+                        fSize += InputFiles[CurrentFile].AudioStream[0].Bitrate * MediaDuration.TotalSeconds;
                     }
                     else
                     {
-                        fSize += int.Parse(TextBoxAudioBitrate.Text) * Duration.TotalSeconds;
+                        fSize += int.Parse(TextBoxAudioBitrate.Text) * MediaDuration.TotalSeconds;
                     }
                 }
 
@@ -373,11 +360,11 @@ namespace FFmpeg_GUI
                 {
                     if (ComboBoxVideoCodec.SelectedIndex == 0)
                     {
-                        fSize += InputFiles[CurrentFile].VideoStream.Bitrate * Duration.TotalSeconds;
+                        fSize += InputFiles[CurrentFile].VideoStream.Bitrate * MediaDuration.TotalSeconds;
                     }
                     else
                     {
-                        fSize += int.Parse(TextBoxVideoBitrate.Text) * Duration.TotalSeconds;
+                        fSize += int.Parse(TextBoxVideoBitrate.Text) * MediaDuration.TotalSeconds;
                     }
                 }
 
@@ -420,16 +407,27 @@ namespace FFmpeg_GUI
             {
                 try
                 {
-                    TextBlockProcessed.Text = "Processed: " + Processed.ToString() + "     of     " + new TimeSpan(Duration.Hours, Duration.Minutes, Duration.Seconds).ToString();
+                    TextBlockProcessed.Text = "Processed: " + MediaTimeProcessed.ToString() + "     of     " + new TimeSpan(MediaDuration.Hours, MediaDuration.Minutes, MediaDuration.Seconds).ToString();
 
-                    TextBlockSpeed.Text = "Processing Speed: " + SpeedFPS.ToString() + " fps (" + Speed.ToString() + "x)";
+                    if (string.IsNullOrEmpty(SpeedFPS))
+                    {
+                        TextBlockSpeed.Text = "Processing Speed: " + Speed.ToString() + "x";
+                    }
+                    else
+                    {
+                        TextBlockSpeed.Text = "Processing Speed: " + SpeedFPS.ToString() + " fps (" + Speed.ToString() + "x)";
+                    }
 
-                    TextBlockTimeElapsed.Text = "Time Elapsed: " + Elapsed.ToString();
+                    TextBlockTimeElapsed.Text = "Time Elapsed: " + ProcessingTimeElapsed.ToString();
 
-                    Remaining = TimeSpan.FromSeconds((int)((Duration - Processed).TotalSeconds / Speed));
-                    TextBlockTimeRemaining.Text = "Time Remaining: " + Remaining.ToString();
+                    if (Speed != -1)
+                    {
+                        ProcessingTimeRemaining = TimeSpan.FromSeconds((int)((MediaDuration - MediaTimeProcessed).TotalSeconds / Speed));
+                    }
 
-                    ProgressBarProgress.Value = (int)((Processed.TotalSeconds / Duration.TotalSeconds) * 100);
+                    TextBlockTimeRemaining.Text = "Time Remaining: " + ProcessingTimeRemaining.ToString();
+
+                    ProgressBarProgress.Value = (int)((MediaTimeProcessed.TotalSeconds / MediaDuration.TotalSeconds) * 100);
                     TextBlockProgress.Text = ProgressBarProgress.Value.ToString() + " %";
                 }
                 catch
@@ -809,7 +807,7 @@ namespace FFmpeg_GUI
                     CheckBoxAudioBitrate.IsChecked = true;
                 }
             }
-            catch (Exception ex)
+            catch
             {
 
             }
@@ -841,7 +839,7 @@ namespace FFmpeg_GUI
                     CheckBoxVideoBitrate.IsChecked = true;
                 }
             }
-            catch (Exception ex)
+            catch
             {
 
             }
@@ -929,7 +927,7 @@ namespace FFmpeg_GUI
                         break;
                     }
                 }
-            }           
+            }
         }
     }
 

@@ -5,8 +5,6 @@ Display confirmation before ending program during conversion process
 
 Allow user to keep aspect ratio when setting resolution by setting the other dimension automatically
 Allow user to specify framerate
-Show time elapsed during processing
-Show fps during processing
 
 Allow user to specifiy encoder settings
 Allow user to use crf values
