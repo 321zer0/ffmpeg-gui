@@ -266,17 +266,17 @@ namespace FFmpeg_GUI
                 Speed = -1;
 
                 //Get Processing Speed
-                //if (Line.Contains("speed="))
-                //{
-                //    for (int i = 0; i < Parts.Length; i++)
-                //    {
-                //        if (Parts[i].Contains("speed="))
-                //        {
-                //            Speed = double.Parse(Parts[i].Replace("speed=", "").Replace("x", ""));
-                //            break;
-                //        }
-                //    }
-                //}
+                if (Line.Contains("speed="))
+                {
+                    for (int i = 0; i < Parts.Length; i++)
+                    {
+                        if (Parts[i].Contains("speed="))
+                        {
+                            Speed = double.Parse(Parts[i].Replace("speed=", "").Replace("x", ""));
+                            break;
+                        }
+                    }
+                }
 
 
 
@@ -293,7 +293,7 @@ namespace FFmpeg_GUI
 
                             if (Speed == -1 && InputFiles[CurrentFile].VideoStream != null)
                             {
-                                Speed = double.Parse(SpeedFPS) / InputFiles[CurrentFile].VideoStream.Framerate;
+                                Speed = Math.Round(double.Parse(SpeedFPS) / InputFiles[CurrentFile].VideoStream.Framerate, 2);
                             }
 
                             break;
@@ -766,18 +766,29 @@ namespace FFmpeg_GUI
 
         private void WindowMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            try
+            if (this == null)
             {
-                //Don't leave FFmpeg running in background when user closes the GUI
-                if (!ProcessFFmpeg.HasExited)
-                {
-                    ProcessFFmpeg.Kill();
-                    ProcessFFmpeg.Close();
-                }
+                return;
             }
-            catch
-            {
 
+            if (ProcessFFmpeg != null && !ProcessFFmpeg.HasExited)
+            {
+                if (System.Windows.MessageBox.Show("Are you sure to cancel the conversion process? This action cannot be undone!", "Cancel Process", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        ProcessFFmpeg.Kill();
+                        ProcessFFmpeg.Close();
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                else
+                {
+                    e.Cancel = true;
+                }
             }
         }
 
