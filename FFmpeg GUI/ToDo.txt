@@ -1,7 +1,5 @@
 ﻿When both Audio & Video are excluded, Output file size should be zero
 
-Display confirmation before ending program during conversion process
-
 Allow user to keep aspect ratio when setting resolution by setting the other dimension automatically
 Allow user to specify framerate
 

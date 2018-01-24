@@ -55,7 +55,7 @@ namespace FFmpeg_GUI
 
             if (!File.Exists(Directory.GetCurrentDirectory() + "\\" + "ffmpeg.exe"))
             {
-                System.Windows.MessageBox.Show("ffmpeg.exe binary file cannot be found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show("ffmpeg.exe binary file cannot be found!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 System.Windows.Application.Current.Shutdown();
             }
 
@@ -334,9 +334,19 @@ namespace FFmpeg_GUI
                     TextBlockOriginalSize.Text = "Original Size: " + Math.Round(oSize / 1024, 1).ToString() + " KB";
                 }
 
-                if (CheckBoxEnableSelection.IsChecked == true && !string.IsNullOrEmpty(TextBoxEndHour.Text) && !string.IsNullOrEmpty(TextBoxEndMinute.Text) && !string.IsNullOrEmpty(TextBoxEndSecond.Text))
+                if (CheckBoxEnableSelection.IsChecked == true)
                 {
-                    MediaDuration = new TimeSpan(int.Parse(TextBoxEndHour.Text), int.Parse(TextBoxEndMinute.Text), int.Parse(TextBoxEndSecond.Text));
+                    try
+                    {
+                        TimeSpan StartTime = TimeSpan.FromSeconds((int.Parse(TextBoxStartHour.Text) * 3600) + (int.Parse(TextBoxStartMinute.Text) * 60) + int.Parse(TextBoxStartSecond.Text));
+                        TimeSpan EndTime = TimeSpan.FromSeconds((int.Parse(TextBoxEndHour.Text) * 3600) + (int.Parse(TextBoxEndMinute.Text) * 60) + int.Parse(TextBoxEndSecond.Text));
+
+                        MediaDuration = EndTime - StartTime;
+                    }
+                    catch
+                    {
+
+                    }
                 }
                 else
                 {
@@ -462,7 +472,14 @@ namespace FFmpeg_GUI
             //Selection Start
             if (CheckBoxEnableSelection.IsChecked == true)
             {
-                GeneralArguments += "-ss " + TextBoxStartHour.Text + ":" + TextBoxStartMinute.Text + ":" + TextBoxStartSecond.Text + "." + TextBoxStartMilisecond.Text + " ";
+                try
+                {
+                    GeneralArguments += "-ss " + TextBoxStartHour.Text + ":" + TextBoxStartMinute.Text + ":" + TextBoxStartSecond.Text + "." + TextBoxStartMilisecond.Text + " ";
+                }
+                catch
+                {
+
+                }
             }
 
             //Source File
@@ -473,7 +490,19 @@ namespace FFmpeg_GUI
             //Selection Duration
             if (CheckBoxEnableSelection.IsChecked == true)
             {
-                GeneralArguments += " -t " + TextBoxEndHour.Text + ":" + TextBoxEndMinute.Text + ":" + TextBoxEndSecond.Text + "." + TextBoxStartMilisecond.Text;
+                try
+                {
+                    TimeSpan StartTime = TimeSpan.FromMilliseconds((int.Parse(TextBoxStartHour.Text) * 3600 * 1000) + (int.Parse(TextBoxStartMinute.Text) * 60 * 1000) + (int.Parse(TextBoxStartSecond.Text) * 1000) + int.Parse(TextBoxStartMilisecond.Text));
+                    TimeSpan EndTime = TimeSpan.FromMilliseconds((int.Parse(TextBoxEndHour.Text) * 3600 * 1000) + (int.Parse(TextBoxEndMinute.Text) * 60 * 1000) + (int.Parse(TextBoxEndSecond.Text) * 1000) + int.Parse(TextBoxEndMilisecond.Text));
+
+                    MediaDuration = EndTime - StartTime;
+
+                    GeneralArguments += " -t " + MediaDuration.Hours.ToString() + ":" + MediaDuration.Minutes.ToString() + ":" + MediaDuration.Seconds.ToString() + "." + MediaDuration.Milliseconds.ToString().TrimEnd('0');
+                }
+                catch
+                {
+
+                }
             }
 
 
@@ -732,22 +761,32 @@ namespace FFmpeg_GUI
             }
 
             TimeSpan StartTime = TimeSpan.FromMilliseconds((int.Parse(TextBoxStartHour.Text) * 3600 * 1000) + (int.Parse(TextBoxStartMinute.Text) * 60 * 1000) + (int.Parse(TextBoxStartSecond.Text) * 1000) + int.Parse(TextBoxStartMilisecond.Text));
-            TimeSpan DurationTime = TimeSpan.FromMilliseconds((int.Parse(TextBoxEndHour.Text) * 3600 * 1000) + (int.Parse(TextBoxEndMinute.Text) * 60 * 1000) + (int.Parse(TextBoxEndSecond.Text) * 1000) + int.Parse(TextBoxEndMilisecond.Text));
+            TimeSpan EndTime = TimeSpan.FromMilliseconds((int.Parse(TextBoxEndHour.Text) * 3600 * 1000) + (int.Parse(TextBoxEndMinute.Text) * 60 * 1000) + (int.Parse(TextBoxEndSecond.Text) * 1000) + int.Parse(TextBoxEndMilisecond.Text));
 
-            TimeSpan EndTime = StartTime + DurationTime;
+            TimeSpan SelectedDuration = EndTime - StartTime;
 
             if (InputFiles != null && InputFiles.Length != 0)
             {
                 foreach (MediaFile MediaFile in InputFiles)
                 {
-                    if (EndTime > MediaFile.Duration)
+                    if (EndTime < StartTime)
                     {
                         CheckBoxEnableSelection.IsChecked = false;
 
-                        System.Windows.MessageBox.Show("The selection cannot be applied because the file \"" + MediaFile.Filename + "\" is outside the selection range.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-
+                        System.Windows.MessageBox.Show("The selection cannot be applied because Start Time is greater than End Time.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                         TabItemInput.Focus();
-                        return;
+
+                        break;
+                    }
+
+                    if (EndTime > MediaFile.Duration || StartTime > MediaFile.Duration)
+                    {
+                        CheckBoxEnableSelection.IsChecked = false;
+
+                        System.Windows.MessageBox.Show("The selection cannot be applied because the file \"" + MediaFile.Filename + "\" duration is outside the selection range.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        TabItemInput.Focus();
+
+                        break;
                     }
                 }
             }
@@ -921,19 +960,30 @@ namespace FFmpeg_GUI
         private void CheckBoxEnableSelection_Checked(object sender, RoutedEventArgs e)
         {
             TimeSpan StartTime = TimeSpan.FromMilliseconds((int.Parse(TextBoxStartHour.Text) * 3600 * 1000) + (int.Parse(TextBoxStartMinute.Text) * 60 * 1000) + (int.Parse(TextBoxStartSecond.Text) * 1000) + int.Parse(TextBoxStartMilisecond.Text));
-            TimeSpan DurationTime = TimeSpan.FromMilliseconds((int.Parse(TextBoxEndHour.Text) * 3600 * 1000) + (int.Parse(TextBoxEndMinute.Text) * 60 * 1000) + (int.Parse(TextBoxEndSecond.Text) * 1000) + int.Parse(TextBoxEndMilisecond.Text));
+            TimeSpan EndTime = TimeSpan.FromMilliseconds((int.Parse(TextBoxEndHour.Text) * 3600 * 1000) + (int.Parse(TextBoxEndMinute.Text) * 60 * 1000) + (int.Parse(TextBoxEndSecond.Text) * 1000) + int.Parse(TextBoxEndMilisecond.Text));
 
-            TimeSpan EndTime = StartTime + DurationTime;
+            TimeSpan SelectedDuration = EndTime - StartTime;
 
             if (InputFiles != null && InputFiles.Length != 0)
             {
                 foreach (MediaFile MediaFile in InputFiles)
                 {
-                    if (EndTime > MediaFile.Duration)
+                    if (EndTime < StartTime)
                     {
                         CheckBoxEnableSelection.IsChecked = false;
 
-                        System.Windows.MessageBox.Show("The selection cannot be applied because the file \"" + MediaFile.Filename + "\" is outside the selection range.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        System.Windows.MessageBox.Show("The selection cannot be applied because Start Time is greater than End Time.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        TabItemInput.Focus();
+
+                        break;
+                    }
+
+                    if (EndTime > MediaFile.Duration || StartTime > MediaFile.Duration)
+                    {
+                        CheckBoxEnableSelection.IsChecked = false;
+
+                        System.Windows.MessageBox.Show("The selection cannot be applied because the file \"" + MediaFile.Filename + "\" duration is outside the selection range.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        TabItemInput.Focus();
 
                         break;
                     }
@@ -941,8 +991,6 @@ namespace FFmpeg_GUI
             }
         }
     }
-
-
 }
 
 
