@@ -39,6 +39,14 @@ namespace FFmpeg_GUI
             private set;
         }
 
+        public double AspectRatio
+        {
+            get
+            {
+                return ((double)ResolutionX / (double)ResolutionY);
+            }
+        }
+
         public string PixelFormat
         {
             get;

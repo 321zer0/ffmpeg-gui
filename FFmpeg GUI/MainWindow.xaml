@@ -78,8 +78,8 @@
                     </ComboBox>
                     <TextBlock x:Name="textBlock2_Copy4" HorizontalAlignment="Left" Margin="305,22,0,0" TextWrapping="Wrap" Text="W:" VerticalAlignment="Top" RenderTransformOrigin="0.555,2.283" FontSize="10.667"/>
                     <TextBlock x:Name="textBlock2_Copy5" HorizontalAlignment="Left" Margin="425,22,0,0" TextWrapping="Wrap" Text="H:" VerticalAlignment="Top" RenderTransformOrigin="0.555,2.283" FontSize="10.667"/>
-                    <TextBox x:Name="TextBoxVideoResolutionWidth" HorizontalAlignment="Left" Height="23" Margin="322,19,0,0" VerticalAlignment="Top" Width="50" MaxLines="1" Text="854" MaxLength="4"/>
-                    <TextBox x:Name="TextBoxVideoResolutionHeight" HorizontalAlignment="Left" Height="23" Margin="441,19,0,0" VerticalAlignment="Top" Width="50" RenderTransformOrigin="4.255,-0.328" MaxLines="1" Text="480" MaxLength="4"/>
+                    <TextBox x:Name="TextBoxVideoResolutionWidth" HorizontalAlignment="Left" Height="23" Margin="322,19,0,0" VerticalAlignment="Top" Width="50" MaxLines="1" Text="854" MaxLength="4" LostFocus="TextBoxVideoResolutionWidth_LostFocus"/>
+                    <TextBox x:Name="TextBoxVideoResolutionHeight" HorizontalAlignment="Left" Height="23" Margin="441,19,0,0" VerticalAlignment="Top" Width="50" RenderTransformOrigin="4.255,-0.328" MaxLines="1" Text="480" MaxLength="4" TextChanged="TextBoxVideoResolutionHeight_TextChanged" LostFocus="TextBoxVideoResolutionHeight_LostFocus"/>
                     <TextBox x:Name="TextBoxVideoBitrate" HorizontalAlignment="Left" Height="23" Margin="79,70,0,0" Text="800" VerticalAlignment="Top" Width="65" MaxLines="1" MaxLength="5"/>
                     <TextBlock x:Name="textBlock4" HorizontalAlignment="Left" Margin="162,72,0,0" TextWrapping="Wrap" Text="kbps" VerticalAlignment="Top"/>
                     <ComboBox x:Name="ComboBoxVideoRotation" HorizontalAlignment="Left" Margin="305,69,0,0" VerticalAlignment="Top" Width="230" SelectedIndex="2" IsEnabled="False">

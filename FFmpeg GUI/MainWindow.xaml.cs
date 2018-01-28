@@ -262,8 +262,23 @@ namespace FFmpeg_GUI
 
 
 
+                //Get Processing Speed in FPS
+                if (Line.Contains("fps="))
+                {
+                    for (int i = 0; i < Parts.Length; i++)
+                    {
+                        if (Parts[i].Contains("fps="))
+                        {
+                            SpeedFPS = Parts[i + 1];
 
-                Speed = -1;
+                            //Speed = Math.Round(double.Parse(SpeedFPS) / InputFiles[CurrentFile].VideoStream.Framerate, 2);
+
+                            break;
+                        }
+                    }
+                }
+
+
 
                 //Get Processing Speed
                 if (Line.Contains("speed="))
@@ -280,26 +295,14 @@ namespace FFmpeg_GUI
 
 
 
-                SpeedFPS = "";
-
-                //Get Processing Speed in FPS
-                if (Line.Contains("fps="))
+                if (Environment.OSVersion.ToString().ToLower().Contains("unix"))
                 {
-                    for (int i = 0; i < Parts.Length; i++)
-                    {
-                        if (Parts[i].Contains("fps="))
-                        {
-                            SpeedFPS = Parts[i + 1];
+                    //find delta TimeProcessed in 1 second
+                    //Speed = delta TimeProcessed expressed in seconds
 
-                            if (Speed == -1 && InputFiles[CurrentFile].VideoStream != null)
-                            {
-                                Speed = Math.Round(double.Parse(SpeedFPS) / InputFiles[CurrentFile].VideoStream.Framerate, 2);
-                            }
-
-                            break;
-                        }
-                    }
                 }
+
+
             }
             catch
             {
@@ -988,6 +991,77 @@ namespace FFmpeg_GUI
                         break;
                     }
                 }
+            }
+        }
+
+        private void TextBoxVideoResolutionHeight_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                double NewWidth = (InputFiles[CurrentFile].VideoStream.AspectRatio * int.Parse(TextBoxVideoResolutionHeight.Text));
+
+                if ((((int)NewWidth) % 2) != 0)
+                {
+                    NewWidth--;
+                }
+
+                TextBoxVideoResolutionWidth.Text = ((int)NewWidth).ToString();
+            }
+            catch
+            {
+               
+            }
+        }
+
+        private void TextBoxVideoResolutionHeight_LostFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                int Height = int.Parse(TextBoxVideoResolutionHeight.Text);
+
+                if ((Height % 2) != 0)
+                {
+                   Height--;
+                }
+
+                TextBoxVideoResolutionHeight.Text = Height.ToString();
+
+
+                double NewWidth = (InputFiles[CurrentFile].VideoStream.AspectRatio * int.Parse(TextBoxVideoResolutionHeight.Text));
+
+                if ((((int)NewWidth) % 2) != 0)
+                {
+                    NewWidth--;
+                }
+
+                TextBoxVideoResolutionWidth.Text = ((int)NewWidth).ToString();
+            }
+            catch
+            {
+
+            }
+        }   
+
+        private void TextBoxVideoResolutionWidth_LostFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                int Width = int.Parse(TextBoxVideoResolutionWidth.Text);
+
+                if ((Width % 2) != 0)
+                {
+                    Width--;
+                }
+
+                TextBoxVideoResolutionWidth.Text = Width.ToString();
+
+                string tmp = TextBoxVideoResolutionHeight.Text;
+                TextBoxVideoResolutionHeight.Text = "0";
+                TextBoxVideoResolutionHeight.Text = tmp;
+            }
+            catch
+            {
+
             }
         }
     }

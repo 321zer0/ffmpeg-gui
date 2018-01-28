@@ -23,7 +23,6 @@ Taskbar Progress
 Windows 10 Notification
 
 
-
 The general guideline is to use the slowest preset that you have patience for. Current presets in descending order of speed are: 
 ultrafast,superfast, veryfast, faster, fast, medium, slow, slower, veryslow, placebo. The default preset is medium
 
