@@ -1,6 +1,5 @@
 ﻿When both Audio & Video are excluded, Output file size should be zero
 
-Allow user to keep aspect ratio when setting resolution by setting the other dimension automatically
 Allow user to specify framerate
 
 Allow user to specifiy encoder settings

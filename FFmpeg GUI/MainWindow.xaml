@@ -51,7 +51,7 @@
                     <Grid Background="#FFE5E5E5">
                         <TextBlock x:Name="textBlock2_Copy1" HorizontalAlignment="Left" Margin="15,20,0,0" TextWrapping="Wrap" Text="Codec:" VerticalAlignment="Top" RenderTransformOrigin="0.555,2.283"/>
                         <TextBox x:Name="TextBoxAudioBitrate" HorizontalAlignment="Left" Height="23" Margin="79,66,0,0" Text="128" VerticalAlignment="Top" Width="65" MaxLines="1" MaxLength="4" IsEnabled="False"/>
-                        <TextBlock x:Name="textBlock4_Copy" HorizontalAlignment="Left" Margin="162,68,0,0" TextWrapping="Wrap" Text="kbps" VerticalAlignment="Top" RenderTransformOrigin="0.16,0.625"/>
+                        <TextBlock x:Name="textBlock4_Copy" HorizontalAlignment="Left" Margin="159,68,0,0" TextWrapping="Wrap" Text="kbps" VerticalAlignment="Top" RenderTransformOrigin="0.16,0.625"/>
                         <CheckBox x:Name="CheckBoxAudioBitrate" Content="Bitrate:" HorizontalAlignment="Left" Margin="15,69,0,0" VerticalAlignment="Top" IsEnabled="False" Checked="CheckBoxAudioBitrate_Checked" Unchecked="CheckBoxAudioBitrate_Unchecked"/>
                         <ComboBox x:Name="ComboBoxAudioCodec" HorizontalAlignment="Left" Margin="62,18,0,0" VerticalAlignment="Top" Width="125" SelectedIndex="0" Text="Copy" SelectionChanged="ComboBoxAudioCodec_SelectionChanged">
                             <ComboBoxItem Content="Copy"/>
@@ -81,7 +81,7 @@
                     <TextBox x:Name="TextBoxVideoResolutionWidth" HorizontalAlignment="Left" Height="23" Margin="322,19,0,0" VerticalAlignment="Top" Width="50" MaxLines="1" Text="854" MaxLength="4" LostFocus="TextBoxVideoResolutionWidth_LostFocus"/>
                     <TextBox x:Name="TextBoxVideoResolutionHeight" HorizontalAlignment="Left" Height="23" Margin="441,19,0,0" VerticalAlignment="Top" Width="50" RenderTransformOrigin="4.255,-0.328" MaxLines="1" Text="480" MaxLength="4" TextChanged="TextBoxVideoResolutionHeight_TextChanged" LostFocus="TextBoxVideoResolutionHeight_LostFocus"/>
                     <TextBox x:Name="TextBoxVideoBitrate" HorizontalAlignment="Left" Height="23" Margin="79,70,0,0" Text="800" VerticalAlignment="Top" Width="65" MaxLines="1" MaxLength="5"/>
-                    <TextBlock x:Name="textBlock4" HorizontalAlignment="Left" Margin="162,72,0,0" TextWrapping="Wrap" Text="kbps" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="textBlock4" HorizontalAlignment="Left" Margin="157,72,0,0" TextWrapping="Wrap" Text="kbps" VerticalAlignment="Top"/>
                     <ComboBox x:Name="ComboBoxVideoRotation" HorizontalAlignment="Left" Margin="305,69,0,0" VerticalAlignment="Top" Width="230" SelectedIndex="2" IsEnabled="False">
                         <ComboBoxItem Content="90° Counter Clockwise &amp; Vertical Flip"/>
                         <ComboBoxItem Content="90° Clockwise"/>
@@ -93,7 +93,10 @@
                     <TextBlock x:Name="textBlock3" HorizontalAlignment="Left" Margin="378,21,0,0" TextWrapping="Wrap" Text="pixels" VerticalAlignment="Top"/>
                     <TextBlock x:Name="textBlock3_Copy" HorizontalAlignment="Left" Margin="496,21,0,0" TextWrapping="Wrap" Text="pixels" VerticalAlignment="Top"/>
                     <CheckBox x:Name="CheckBoxVideoBitrate" Content="Bitrate:" HorizontalAlignment="Left" Margin="15,73,0,0" VerticalAlignment="Top" IsChecked="True" Checked="CheckBoxVideoBitrate_Checked" Unchecked="CheckBoxVideoBitrate_Unchecked"/>
-                    <CheckBox x:Name="CheckBoxVideo" Content="Include Video" HorizontalAlignment="Left" Margin="15,128,0,0" VerticalAlignment="Top" Width="124" Checked="CheckBoxVideo_Checked" Unchecked="CheckBoxVideo_Unchecked" IsChecked="True"/>
+                    <CheckBox x:Name="CheckBoxVideo" Content="Include Video" HorizontalAlignment="Left" Margin="15,172,0,0" VerticalAlignment="Top" Width="124" Checked="CheckBoxVideo_Checked" Unchecked="CheckBoxVideo_Unchecked" IsChecked="True"/>
+                    <CheckBox x:Name="CheckBoxVideoFramerate" Content="Framerate:" HorizontalAlignment="Left" Margin="15,123,0,0" VerticalAlignment="Top" Checked="CheckBoxVideoFramerate_Checked" Unchecked="CheckBoxVideoFramerate_Unchecked"/>
+                    <TextBox x:Name="TextBoxVideoFramerate" HorizontalAlignment="Left" Height="23" Margin="101,119,0,0" TextWrapping="Wrap" Text="25" VerticalAlignment="Top" Width="43" IsEnabled="False" MaxLines="1" MaxLength="4"/>
+                    <TextBlock x:Name="textBlock4_Copy2" HorizontalAlignment="Left" Margin="157,122,0,0" TextWrapping="Wrap" Text="fps" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Status">

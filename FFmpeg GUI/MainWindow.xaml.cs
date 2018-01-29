@@ -543,7 +543,6 @@ namespace FFmpeg_GUI
 
 
                 //Resolution
-                //Keep or change aspect ratio feature???  [To be implemented]
                 if (ComboBoxVideoCodec.SelectedIndex != 0 && CheckBoxVideoResolution.IsChecked == true)
                 {
                     GeneralArguments += " -s " + TextBoxVideoResolutionWidth.Text + "x" + TextBoxVideoResolutionHeight.Text;
@@ -571,11 +570,11 @@ namespace FFmpeg_GUI
                 //}
 
 
-                //Frame Rate [To be implemented]
-                //if (ComboBoxVideoCodec.SelectedIndex != 0)
-                //{
-                //    Argument += " -r 25";
-                //}
+                //Frame Rate
+                if (ComboBoxVideoCodec.SelectedIndex != 0 && CheckBoxVideoFramerate.IsEnabled == true)
+                {
+                    GeneralArguments += " -r " + TextBoxVideoFramerate.Text;
+                }
 
 
                 //Set speed: (x2 in this case) [To be implemented]
@@ -875,21 +874,24 @@ namespace FFmpeg_GUI
                     CheckBoxVideoBitrate.IsEnabled = false;
                     CheckBoxVideoResolution.IsEnabled = false;
                     CheckBoxVideoRotation.IsEnabled = false;
+                    CheckBoxVideoFramerate.IsEnabled = false;
                     TextBoxVideoResolutionWidth.IsEnabled = false;
                     TextBoxVideoResolutionHeight.IsEnabled = false;
+                    TextBoxVideoFramerate.IsEnabled = false;
 
                     CheckBoxVideoBitrate.IsChecked = false;
                     CheckBoxVideoResolution.IsChecked = false;
                     CheckBoxVideoRotation.IsChecked = false;
                     CheckBoxAudioVolumeMultiplier.IsChecked = false;
+                    CheckBoxVideoFramerate.IsChecked = false;
                 }
                 else
                 {
                     CheckBoxVideoBitrate.IsEnabled = true;
                     CheckBoxVideoResolution.IsEnabled = true;
                     CheckBoxVideoRotation.IsEnabled = true;
-
                     CheckBoxVideoBitrate.IsChecked = true;
+                    CheckBoxVideoFramerate.IsEnabled = true;
                 }
             }
             catch
@@ -960,6 +962,16 @@ namespace FFmpeg_GUI
             ComboBoxVideoRotation.IsEnabled = false;
         }
 
+        private void CheckBoxVideoFramerate_Checked(object sender, RoutedEventArgs e)
+        {
+            TextBoxVideoFramerate.IsEnabled = true;
+        }
+
+        private void CheckBoxVideoFramerate_Unchecked(object sender, RoutedEventArgs e)
+        {
+            TextBoxVideoFramerate.IsEnabled = false;
+        }
+
         private void CheckBoxEnableSelection_Checked(object sender, RoutedEventArgs e)
         {
             TimeSpan StartTime = TimeSpan.FromMilliseconds((int.Parse(TextBoxStartHour.Text) * 3600 * 1000) + (int.Parse(TextBoxStartMinute.Text) * 60 * 1000) + (int.Parse(TextBoxStartSecond.Text) * 1000) + int.Parse(TextBoxStartMilisecond.Text));
@@ -1009,7 +1021,7 @@ namespace FFmpeg_GUI
             }
             catch
             {
-               
+
             }
         }
 
@@ -1021,7 +1033,7 @@ namespace FFmpeg_GUI
 
                 if ((Height % 2) != 0)
                 {
-                   Height--;
+                    Height--;
                 }
 
                 TextBoxVideoResolutionHeight.Text = Height.ToString();
@@ -1040,7 +1052,7 @@ namespace FFmpeg_GUI
             {
 
             }
-        }   
+        }
 
         private void TextBoxVideoResolutionWidth_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -1064,6 +1076,7 @@ namespace FFmpeg_GUI
 
             }
         }
+
     }
 }
 
