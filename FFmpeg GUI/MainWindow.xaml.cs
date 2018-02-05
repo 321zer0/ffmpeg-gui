@@ -41,6 +41,7 @@ namespace FFmpeg_GUI
         TimeSpan ProcessingTimeRemaining = TimeSpan.FromSeconds(0);
         TimeSpan ProcessingTimeElapsed = TimeSpan.FromSeconds(0);
 
+        bool SpeedMissing = true;
         double Speed = 0.0;
         string SpeedFPS = "";
 
@@ -276,7 +277,11 @@ namespace FFmpeg_GUI
                         {
                             SpeedFPS = Parts[i + 1];
 
-                            //Speed = Math.Round(double.Parse(SpeedFPS) / InputFiles[CurrentFile].VideoStream.Framerate, 2);
+                            //Calculate ProcessingSpeed from FPS if FFmpeg doesn't output it
+                            if(InputFiles[CurrentFile].VideoStream != null && SpeedMissing)
+                            {
+                                Speed = Math.Round(double.Parse(SpeedFPS) / InputFiles[CurrentFile].VideoStream.Framerate, 2);
+                            }
 
                             break;
                         }
@@ -293,6 +298,7 @@ namespace FFmpeg_GUI
                         if (Parts[i].Contains("speed="))
                         {
                             Speed = double.Parse(Parts[i].Replace("speed=", "").Replace("x", ""));
+                            SpeedMissing = false;
                             break;
                         }
                     }
