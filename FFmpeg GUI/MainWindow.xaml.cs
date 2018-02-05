@@ -97,22 +97,27 @@ namespace FFmpeg_GUI
 
             if (Open.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                InputFiles = new MediaFile[Open.FileNames.Length];
+                this.Dispatcher.Invoke(() =>
+                    {
+                        InputFiles = new MediaFile[Open.FileNames.Length];
 
-                for (int i = 0; i < Open.FileNames.Length; i++)
-                {
-                    //Store MediaFile instance of the media file
-                    InputFiles[i] = new MediaFile(Open.FileNames[i]);
-                    //InputFiles[i].ShowMediaInfo();
-                }
+                        for (int i = 0; i < Open.FileNames.Length; i++)
+                        {
+                            //Store MediaFile instance of the media file
+                            InputFiles[i] = new MediaFile(Open.FileNames[i]);
+                            this.Title = "FFmpeg GUI Frontend: Adding " + (i + 1).ToString() + " of " + Open.FileNames.Length.ToString();
+                        }
 
-                TextBoxTargetPath.Text = new FileInfo(Open.FileNames[0]).Directory.FullName;
+                        this.Title = "FFmpeg GUI Frontend";
 
-                if (TextBoxTargetPath.Text != "" && (CheckBoxVideo.IsChecked == true || CheckBoxAudio.IsChecked == true))
-                {
-                    ButtonConvert.IsEnabled = true;
-                }
+                        TextBoxTargetPath.Text = new FileInfo(Open.FileNames[0]).Directory.FullName;
 
+                        if (TextBoxTargetPath.Text != "" && (CheckBoxVideo.IsChecked == true || CheckBoxAudio.IsChecked == true))
+                        {
+                            ButtonConvert.IsEnabled = true;
+                        }
+                    }
+                );
             }
         }
 

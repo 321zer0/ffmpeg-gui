@@ -1,7 +1,5 @@
 ﻿When both Audio & Video are excluded, Output file size should be zero
 
-Allow user to specify framerate
-
 Allow user to specifiy encoder settings
 Allow user to use crf values
 
@@ -47,8 +45,6 @@ Register HotKey to Start/Pause/Stop screen capture
 
 -c:a pcm_s16le
 -threads 0/1/2/3/4...16
-
-
 
 
 Disable Audio/Video/Status tab, Enable after selecting input files
